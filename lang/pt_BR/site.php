@@ -8,6 +8,7 @@ return [
     'language' => 'Idioma',
     'organised_by' => 'Organizado por :organiser',
     'home' => 'Início',
+    'breadcrumb' => 'Trilha de navegação',
 
     'announcement' => [
         'label' => 'Aviso',
@@ -32,6 +33,7 @@ return [
         'email' => 'E-mail',
         'whatsapp' => 'WhatsApp',
         'languages' => 'Idiomas',
+        'preferences' => 'Preferências',
         'copyright' => '© :year :organiser. Todos os direitos reservados.',
     ],
 

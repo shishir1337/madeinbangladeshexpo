@@ -13,9 +13,14 @@ class LocaleFormatter
     /**
      * Format a number with the locale's digits and grouping (Bangla uses lakh grouping and Bangla numerals).
      */
-    public function number(int|float $value, ?string $locale = null): string
+    public function number(int|float $value, ?string $locale = null, ?int $decimals = null): string
     {
         $formatter = new NumberFormatter($this->resolve($locale)->icu, NumberFormatter::DECIMAL);
+
+        if ($decimals !== null) {
+            $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimals);
+            $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimals);
+        }
 
         return $formatter->format($value);
     }

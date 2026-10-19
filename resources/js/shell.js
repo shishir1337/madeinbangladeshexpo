@@ -68,6 +68,32 @@ export function registerShell(Alpine) {
         },
     }));
 
+    Alpine.data('tabs', (initial, keys) => ({
+        active: initial,
+
+        init() {
+            // x-show now controls the panels; drop the pre-paint CSS hiding.
+            this.$nextTick(() => {
+                this.$el.querySelectorAll('[data-tab-hidden]').forEach((panel) => panel.removeAttribute('data-tab-hidden'));
+            });
+        },
+
+        select(key) {
+            this.active = key;
+        },
+
+        move(step) {
+            const index = keys.indexOf(this.active);
+            this.go((index + step + keys.length) % keys.length);
+        },
+
+        go(index) {
+            const key = keys.at(index);
+            this.select(key);
+            this.$refs[`tab-${key}`]?.focus();
+        },
+    }));
+
     Alpine.data('motionToggle', () => ({
         reduced: document.documentElement.dataset.motion === 'reduced',
 

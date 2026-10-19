@@ -8,6 +8,7 @@ return [
     'language' => 'ভাষা',
     'organised_by' => 'আয়োজক: :organiser',
     'home' => 'হোম',
+    'breadcrumb' => 'পৃষ্ঠার অবস্থান',
 
     'announcement' => [
         'label' => 'ঘোষণা',
@@ -32,6 +33,7 @@ return [
         'email' => 'ইমেইল',
         'whatsapp' => 'হোয়াটসঅ্যাপ',
         'languages' => 'ভাষা',
+        'preferences' => 'পছন্দসমূহ',
         'copyright' => '© :year :organiser। সর্বস্বত্ব সংরক্ষিত।',
     ],
 

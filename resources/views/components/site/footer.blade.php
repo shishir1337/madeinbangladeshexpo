@@ -92,7 +92,7 @@
         </div>
 
         <div x-data="motionToggle">
-            <h2 class="font-sans text-sm font-semibold text-yellow">{{ __('site.motion.reduce') }}</h2>
+            <h2 class="font-sans text-sm font-semibold text-yellow">{{ __('site.footer.preferences') }}</h2>
             <button
                 type="button"
                 role="switch"

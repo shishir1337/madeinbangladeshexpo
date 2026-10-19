@@ -133,3 +133,27 @@
         }
     }
 }
+
+@layer base {
+    /* Tabs: with JS, inactive panels are hidden before first paint; without JS every panel stays readable. */
+    .js [data-tab-hidden] {
+        display: none;
+    }
+
+    /* Accordion: animate <details> open/close where supported (progressive enhancement). */
+    :root {
+        interpolate-size: allow-keywords;
+    }
+
+    details::details-content {
+        block-size: 0;
+        overflow-y: clip;
+        transition:
+            block-size 0.35s var(--ease-out-expo),
+            content-visibility 0.35s allow-discrete;
+    }
+
+    details[open]::details-content {
+        block-size: auto;
+    }
+}

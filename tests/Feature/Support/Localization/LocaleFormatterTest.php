@@ -75,6 +75,16 @@ class LocaleFormatterTest extends TestCase
         ];
     }
 
+    public function test_numbers_can_have_a_fixed_number_of_decimals(): void
+    {
+        $formatter = app(LocaleFormatter::class);
+
+        $this->assertSame('10.2', $formatter->number(10.2, 'en', 1));
+        $this->assertSame('10,2', $formatter->number(10.2, 'pt_BR', 1));
+        $this->assertSame('১০.২', $formatter->number(10.2, 'bn', 1));
+        $this->assertSame('3.0', $formatter->number(3, 'en', 1));
+    }
+
     public function test_plain_numbers_use_locale_digits_without_grouping(): void
     {
         $formatter = app(LocaleFormatter::class);

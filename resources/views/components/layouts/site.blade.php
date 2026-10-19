@@ -15,7 +15,7 @@
     @endif
     <meta name="theme-color" content="#004F3A">
     <x-seo.alternates />
-    <script>try{var m=localStorage.getItem('mbe.motion');if(m){document.documentElement.dataset.motion=m}}catch(e){}</script>
+    <script>document.documentElement.classList.add('js');try{var m=localStorage.getItem('mbe.motion');if(m){document.documentElement.dataset.motion=m}}catch(e){}</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>

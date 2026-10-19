@@ -23,14 +23,15 @@
     <a id="skip-to-content" href="#main" class="skip-link">{{ __('site.skip_to_content') }}</a>
 
     <x-demo-ribbon />
-
-    <header>
-        <x-locale-switcher />
-    </header>
+    <x-site.announcement />
+    <x-site.header />
 
     <main id="main" tabindex="-1" class="flex-1 outline-none">
         {{ $slot }}
     </main>
+
+    <x-site.footer />
+    <x-site.help-button />
 
     @livewireScriptConfig
 </body>

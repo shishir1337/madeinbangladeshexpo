@@ -33,6 +33,7 @@ return [
             'html_lang' => 'en',
             'icu' => 'en_GB',
             'native_name' => 'English',
+            'short_name' => 'EN',
             'translates_slugs' => false,
             'date_pattern' => 'd MMMM yyyy',
             'range' => [
@@ -48,6 +49,7 @@ return [
             'html_lang' => 'pt-BR',
             'icu' => 'pt_BR',
             'native_name' => 'Português',
+            'short_name' => 'PT',
             'translates_slugs' => true,
             'date_pattern' => "d 'de' MMMM 'de' yyyy",
             'range' => [
@@ -63,6 +65,7 @@ return [
             'html_lang' => 'bn',
             'icu' => 'bn_BD',
             'native_name' => 'বাংলা',
+            'short_name' => 'বাং',
             'translates_slugs' => false,
             'date_pattern' => 'd MMMM yyyy',
             'range' => [

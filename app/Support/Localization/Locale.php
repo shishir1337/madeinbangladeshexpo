@@ -17,12 +17,13 @@ final readonly class Locale
         public bool $translatesSlugs,
         public string $datePattern,
         public array $rangeTemplates,
+        public string $shortName = '',
     ) {}
 
     /**
      * Build a locale from its entry in config/locales.php.
      *
-     * @param  array{prefix: ?string, hreflang: string, html_lang: string, icu: string, native_name: string, translates_slugs: bool, date_pattern: string, range: array{same_month: string, same_year: string, different_years: string}}  $config
+     * @param  array{prefix: ?string, hreflang: string, html_lang: string, icu: string, native_name: string, short_name?: string, translates_slugs: bool, date_pattern: string, range: array{same_month: string, same_year: string, different_years: string}}  $config
      */
     public static function fromConfig(string $key, array $config): self
     {
@@ -33,6 +34,7 @@ final readonly class Locale
             htmlLang: $config['html_lang'],
             icu: $config['icu'],
             nativeName: $config['native_name'],
+            shortName: $config['short_name'] ?? strtoupper($key),
             translatesSlugs: $config['translates_slugs'],
             datePattern: $config['date_pattern'],
             rangeTemplates: $config['range'],

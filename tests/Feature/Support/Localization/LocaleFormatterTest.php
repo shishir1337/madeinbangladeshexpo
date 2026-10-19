@@ -75,6 +75,15 @@ class LocaleFormatterTest extends TestCase
         ];
     }
 
+    public function test_plain_numbers_use_locale_digits_without_grouping(): void
+    {
+        $formatter = app(LocaleFormatter::class);
+
+        $this->assertSame('২০২৬', $formatter->plain(2026, 'bn'));
+        $this->assertSame('2026', $formatter->plain(2026, 'pt_BR'));
+        $this->assertSame('2026', $formatter->plain(2026, 'en'));
+    }
+
     public function test_uses_the_current_locale_when_none_is_given(): void
     {
         app()->setLocale('bn');

@@ -21,6 +21,17 @@ class LocaleFormatter
     }
 
     /**
+     * An integer in the locale's digits without grouping, for years and other identifiers, e.g. "২০২৬".
+     */
+    public function plain(int $value, ?string $locale = null): string
+    {
+        $formatter = new NumberFormatter($this->resolve($locale)->icu, NumberFormatter::DECIMAL);
+        $formatter->setAttribute(NumberFormatter::GROUPING_USED, 0);
+
+        return $formatter->format($value);
+    }
+
+    /**
      * Format a calendar date with the locale's long date pattern, e.g. "22 de março de 2027".
      */
     public function date(CarbonInterface $date, ?string $locale = null): string

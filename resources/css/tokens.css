@@ -1,6 +1,7 @@
 /*
- * Design tokens (spec §6). Yellow is a fill colour only, always with navy text.
- * Raw flag colours are never used as text on white.
+ * Design tokens (spec §6). The palette comes from the two flags: Bangladesh's bottle green and red sun, Brazil's
+ * green, yellow and blue globe. Yellow is a fill colour only, always with navy text; sun and globe are for
+ * graphics (the two discs of the mark), never for text on white.
  */
 @theme {
     --color-cream: #fbf7ee;
@@ -14,11 +15,14 @@
     --color-navy-50: #e8edf7;
     --color-green: #004f3a;
     --color-green-700: #0a6b4f;
+    --color-green-900: #00261c;
     --color-green-50: #e6f2ec;
     --color-yellow: #ffdf00;
     --color-yellow-soft: #fff4b0;
     --color-crimson: #b3122a;
     --color-crimson-50: #fbe9ec;
+    --color-sun: #e8283f;
+    --color-globe: #2456d6;
     --color-midnight: #071a33;
     --color-midnight-2: #0e2a4f;
     --color-midnight-3: #17375f;
@@ -27,12 +31,14 @@
     --font-sans: 'Inter Variable', 'Noto Sans Bengali Variable', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Anek Bangla Variable', 'Inter Variable', 'Noto Sans Bengali Variable', ui-sans-serif, system-ui, sans-serif;
 
+    --text-display-3xl: clamp(3.1rem, 0.7rem + 6.4vw, 8rem);
+    --text-display-3xl--line-height: 0.86;
     --text-display-2xl: clamp(2.75rem, 1.35rem + 6vw, 7rem);
     --text-display-2xl--line-height: 0.92;
-    --text-display-xl: clamp(2.4rem, 1.4rem + 4.2vw, 5.25rem);
-    --text-display-xl--line-height: 0.96;
-    --text-display-lg: clamp(2rem, 1.35rem + 2.8vw, 3.75rem);
-    --text-display-lg--line-height: 1;
+    --text-display-xl: clamp(2.4rem, 1.2rem + 4.6vw, 5.75rem);
+    --text-display-xl--line-height: 0.94;
+    --text-display-lg: clamp(2.15rem, 1.3rem + 3.3vw, 4.4rem);
+    --text-display-lg--line-height: 0.98;
     --text-display-md: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
     --text-display-md--line-height: 1.08;
     --text-display-sm: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);
@@ -45,20 +51,23 @@
 
     --shadow-soft: 0 1px 2px rgb(31 42 68 / 0.05), 0 10px 30px -12px rgb(31 42 68 / 0.18);
     --shadow-lift: 0 2px 4px rgb(31 42 68 / 0.06), 0 22px 48px -18px rgb(31 42 68 / 0.28);
+    --shadow-float: 0 2px 6px rgb(7 26 51 / 0.12), 0 40px 80px -30px rgb(7 26 51 / 0.55);
     --shadow-ring: 0 0 0 1px rgb(31 42 68 / 0.08);
 
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
     --animate-pulse-dot: pulse-dot 2s var(--ease-out-expo) infinite;
 
     @keyframes marquee {
         from {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
         }
         to {
-            transform: translateX(-50%);
+            transform: translate3d(-50%, 0, 0);
         }
     }
 

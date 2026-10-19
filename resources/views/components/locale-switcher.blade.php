@@ -17,7 +17,7 @@
             aria-expanded="false"
             x-bind:aria-expanded="open.toString()"
             aria-controls="language-menu"
-            class="inline-flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-semibold text-ink ring-1 ring-inset ring-sand transition hover:bg-white sm:gap-1.5 sm:px-3"
+            class="header-pill inline-flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-semibold sm:gap-1.5 sm:px-3"
         >
             <x-ui.icon name="globe" class="size-4 max-sm:hidden" />
             <span lang="{{ $currentLocale->htmlLang }}">{{ $currentLocale->shortName }}</span>

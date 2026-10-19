@@ -1,3 +1,7 @@
+@props([
+    'overlay' => false,
+])
+
 @inject('shell', 'App\View\SiteShell')
 
 @php
@@ -5,17 +9,20 @@
     $account = $shell->navigation->account();
 @endphp
 
+{{--
+    The header keeps one height (nothing reflows while scrolling). With `overlay` it starts transparent over a dark
+    hero and turns solid once the page scrolls or a menu opens; colours come from the --hdr-* variables.
+--}}
 <header
-    x-data="siteHeader"
+    x-data="siteHeader(@js($overlay))"
     x-on:keydown.escape.window="closeAll()"
     x-on:click.outside="closeAll(false)"
-    class="sticky top-0 z-40"
+    data-overlay="{{ $overlay ? 'true' : 'false' }}"
+    x-bind:data-overlay="(overlay && ! scrolled && open === null && ! drawer).toString()"
+    class="site-header sticky top-0 z-40"
 >
-    <div
-        class="relative border-b border-transparent bg-cream/75 backdrop-blur-md transition-[background-color,border-color] duration-300"
-        x-bind:class="(scrolled || open) && '!border-sand !bg-cream/95 backdrop-blur-xl'"
-    >
-        <div class="container-site flex h-16 items-center gap-3 transition-[height] duration-300 sm:gap-4 lg:gap-6" x-bind:class="scrolled ? 'lg:h-16' : 'lg:h-20'">
+    <div class="header-bar relative border-b">
+        <div class="container-site flex h-16 items-center gap-3 sm:gap-4 lg:h-[4.5rem] lg:gap-6">
             <x-site.logo class="xl:shrink-0" />
 
             @if ($groups !== [])
@@ -33,11 +40,10 @@
                                     x-bind:aria-expanded="(open === '{{ $group['key'] }}').toString()"
                                     aria-controls="mega-{{ $group['key'] }}"
                                     @class([
-                                        'inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-[0.92rem] font-medium whitespace-nowrap transition-colors hover:bg-sand/60 2xl:px-3',
-                                        'text-navy' => $group['active'],
-                                        'text-ink' => ! $group['active'],
+                                        'header-link inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-[0.92rem] font-medium whitespace-nowrap 2xl:px-3',
+                                        'is-active' => $group['active'],
                                     ])
-                                    x-bind:class="open === '{{ $group['key'] }}' && '!bg-white text-navy shadow-ring'"
+                                    x-bind:class="open === '{{ $group['key'] }}' && 'is-open'"
                                 >
                                     {{ $group['label'] }}
                                     <x-ui.icon name="chevron-down" class="size-4 opacity-60 transition-transform duration-300" x-bind:class="open === '{{ $group['key'] }}' && 'rotate-180'" />
@@ -57,7 +63,7 @@
                     <a
                         href="{{ $account['url'] }}"
                         @if ($account['active']) aria-current="page" @endif
-                        class="inline-flex h-10 items-center gap-2 rounded-full px-2.5 text-sm font-semibold text-ink ring-1 ring-sand ring-inset transition hover:bg-white max-sm:hidden sm:px-3"
+                        class="header-pill inline-flex h-10 items-center gap-2 rounded-full px-2.5 text-sm font-semibold max-sm:hidden sm:px-3"
                     >
                         <x-ui.icon name="log-in" class="size-4" />
                         <span class="max-2xl:sr-only">{{ $account['label'] }}</span>
@@ -66,7 +72,7 @@
 
 
                 @if ($shell->navigation->has('apply'))
-                    <x-ui.button :href="localized_route('apply')" size="sm" class="max-xl:hidden">
+                    <x-ui.button :href="localized_route('apply')" size="sm" class="header-cta max-xl:hidden">
                         {{ __('site.cta.apply') }}
                     </x-ui.button>
                 @endif
@@ -79,7 +85,7 @@
                         aria-expanded="false"
                         x-bind:aria-expanded="drawer.toString()"
                         aria-controls="site-drawer"
-                        class="-mr-1 grid size-11 place-items-center rounded-full text-navy transition hover:bg-sand/60 xl:hidden"
+                        class="header-link -mr-1 grid size-11 place-items-center rounded-full xl:hidden"
                     >
                         <x-ui.icon name="menu" class="size-6" />
                         <span class="sr-only">{{ __('nav.menu') }}</span>

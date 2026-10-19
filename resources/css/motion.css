@@ -1,6 +1,7 @@
 /*
- * Motion. [data-reveal] elements are hidden (.reveal-pending) by JS only when they start below the fold and
- * motion is allowed, so content is always visible without JS, with reduced motion, on first paint and in print.
+ * Motion. Only transform and opacity animate, so every effect runs on the compositor and scrolling stays native.
+ * [data-reveal] elements are hidden (.reveal-pending) by JS only when they start below the fold and motion is
+ * allowed, so content is always visible without JS, with reduced motion, on first paint and in print.
  */
 @layer base {
     .reveal-pending {
@@ -41,17 +42,247 @@
     html[data-motion='reduced'] .reveal-pending {
         opacity: 1;
     }
+}
 
-    html.lenis,
-    html.lenis body {
-        height: auto;
+@layer components {
+    /* Entrance on page load: children of [data-enter] rise in one after another (set --i on each). */
+    [data-enter] > :not(.words-rise) {
+        animation: enter-rise 1s var(--ease-out-quint) both;
+        animation-delay: calc(var(--i, 0) * 90ms + 80ms);
     }
 
-    .lenis.lenis-smooth {
-        scroll-behavior: auto !important;
+    /* The hero mark assembles: the discs slide together, then the overlap and the diamond appear. */
+    .hero-disc--sun {
+        animation: disc-from-left 1.6s var(--ease-out-quint) both 0.1s;
     }
 
-    .lenis.lenis-stopped {
+    .hero-disc--globe {
+        animation: disc-from-right 1.6s var(--ease-out-quint) both 0.1s;
+    }
+
+    .hero-lens {
+        animation: fade-in 0.9s var(--ease-out-quint) both 1.05s;
+    }
+
+    .hero-diamond {
+        animation: diamond-in 1s var(--ease-spring) both 1.25s;
+    }
+
+    .hero-tag {
+        animation: tag-in 0.9s var(--ease-spring) both;
+        animation-delay: 1.45s;
+    }
+
+    @keyframes disc-from-left {
+        from {
+            opacity: 0;
+            transform: translate3d(-22%, 6%, 0) scale(0.86);
+        }
+    }
+
+    @keyframes disc-from-right {
+        from {
+            opacity: 0;
+            transform: translate3d(22%, -6%, 0) scale(0.86);
+        }
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+    }
+
+    @keyframes diamond-in {
+        from {
+            opacity: 0;
+            transform: scale(0) rotate(-135deg);
+        }
+    }
+
+    @keyframes tag-in {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 14px, 0) scale(0.85);
+        }
+    }
+
+    /* A heading whose words rise from behind a mask, one after another (words wrapped server-side). */
+    .words-rise .word {
+        display: inline-block;
         overflow: clip;
+        overflow-clip-margin: 0.12em;
+        vertical-align: top;
+        padding-bottom: 0.08em;
+        margin-bottom: -0.08em;
+    }
+
+    .words-rise .word > span {
+        display: inline-block;
+        animation: word-rise 1.1s var(--ease-out-quint) both;
+        animation-delay: calc(var(--w, 0) * 70ms + 120ms);
+    }
+
+    @keyframes enter-rise {
+        from {
+            opacity: 0;
+            transform: translate3d(0, 26px, 0);
+        }
+    }
+
+    @keyframes word-rise {
+        from {
+            transform: translate3d(0, 105%, 0);
+        }
+    }
+
+    /* Slow zoom on a hero photo; paused by JS while the hero is off screen. */
+    .ken-burns {
+        animation: ken-burns 22s var(--ease-in-out-quart) infinite alternate;
+        transform-origin: 60% 40%;
+    }
+
+    .is-offscreen .ken-burns,
+    .is-offscreen .animate-marquee {
+        animation-play-state: paused;
+    }
+
+    @keyframes ken-burns {
+        from {
+            transform: scale(1.02);
+        }
+        to {
+            transform: scale(1.12);
+        }
+    }
+
+    /* Slides cross-fade; the active one is on top. */
+    [data-slide] {
+        opacity: 0;
+        transition: opacity 1.6s var(--ease-out-quint);
+    }
+
+    [data-slide][data-active] {
+        opacity: 1;
+    }
+
+    /* Rolling digits: each column is a strip of ten digits moved with transform. */
+    .odometer {
+        display: inline-flex;
+        align-items: flex-start;
+        height: var(--odo-h, 1em);
+        line-height: var(--odo-h, 1em);
+        overflow: hidden;
+    }
+
+    .odometer-strip {
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.7s var(--ease-out-quint);
+    }
+
+    .odometer-strip > span {
+        height: var(--odo-h, 1em);
+    }
+
+    :lang(bn) .odometer {
+        --odo-h: 1.15em;
+    }
+
+    /* Trade routes draw themselves once in view: motion.js measures each path (--len) and adds .is-drawn. */
+    .motion-ready .route-draw {
+        stroke-dasharray: var(--len, 2000);
+        stroke-dashoffset: var(--len, 2000);
+        transition: stroke-dashoffset 2.8s var(--ease-in-out-quart);
+    }
+
+    .motion-ready .is-drawn .route-draw {
+        stroke-dashoffset: 0;
+    }
+
+    /* A ship and a plane on the map: only shown once their routes are drawn and they are moving. */
+    .route-traveller-svg {
+        opacity: 0;
+    }
+
+    .motion-ready .is-drawn .route-traveller-svg {
+        opacity: 1;
+        transition: opacity 0.6s ease 2.4s;
+    }
+
+    /* Bars that grow from the left when their [data-draw] parent comes into view. */
+    .balance-bar {
+        flex: 0 0 var(--share);
+        transform-origin: left center;
+        transition: transform 1.8s var(--ease-out-quint);
+    }
+
+    .balance-bar + .balance-bar {
+        transition-delay: 0.35s;
+    }
+
+    .motion-ready [data-draw]:not(.is-drawn) .balance-bar {
+        transform: scaleX(0);
+    }
+
+    /* A marker that travels along a route (CSS offset-path set inline). */
+    .route-traveller {
+        offset-rotate: auto;
+        animation: travel var(--travel-duration, 9s) linear infinite;
+    }
+
+    @keyframes travel {
+        from {
+            offset-distance: 0%;
+        }
+        to {
+            offset-distance: 100%;
+        }
+    }
+
+    /*
+     * Scroll-linked depth where the browser supports scroll timelines, from lg only (on phones the stacked hero is
+     * taller than the screen, so it must not fade while it is being read); a still page elsewhere.
+     */
+    @supports (animation-timeline: scroll()) {
+        @media (width >= 64rem) {
+            .scroll-drift {
+                animation: scroll-drift linear both;
+                animation-timeline: scroll(root);
+                animation-range: 0 100vh;
+            }
+
+            .scroll-fade {
+                animation: scroll-fade linear both;
+                animation-timeline: scroll(root);
+                animation-range: 0 80vh;
+            }
+        }
+
+        @keyframes scroll-drift {
+            to {
+                transform: translate3d(0, 14vh, 0);
+            }
+        }
+
+        @keyframes scroll-fade {
+            to {
+                opacity: 0.15;
+                transform: translate3d(0, -6vh, 0);
+            }
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .scroll-drift,
+        .scroll-fade,
+        .route-traveller,
+        .ken-burns {
+            animation: none !important;
+        }
+    }
+
+    html[data-motion='reduced'] :is(.scroll-drift, .scroll-fade, .route-traveller, .ken-burns) {
+        animation: none !important;
     }
 }

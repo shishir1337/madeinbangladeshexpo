@@ -75,7 +75,7 @@ class HomePageTest extends TestCase
 
         $this->assertDoesNotMatchRegularExpression('/<h1[^>]*>\s*<\/h1>/', $html);
         $this->assertStringNotContainsString('<title></title>', $html);
-        $this->assertMatchesRegularExpression('/<h1[^>]*>\s*'.preg_quote(config('app.name'), '/').'\s*<\/h1>/', $html);
+        $this->assertSame(config('app.name'), $this->headingText($html));
     }
 
     public function test_hero_answers_what_when_where(): void
@@ -84,7 +84,7 @@ class HomePageTest extends TestCase
 
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertMatchesRegularExpression('/<h1[^>]*>\s*Made in Bangladesh Expo 2026\s*<\/h1>/', $html);
+        $this->assertSame('Made in Bangladesh Expo 2026', $this->headingText($html));
         $this->assertMatchesRegularExpression('/data-hero[\s\S]*22–25 March 2027[\s\S]*Pro Magno Centro de Eventos/u', $html);
     }
 
@@ -257,5 +257,15 @@ class HomePageTest extends TestCase
                 'starts_on' => '2027-03-22',
                 'ends_on' => '2027-03-25',
             ]);
+    }
+
+    /**
+     * The visible text of the page's h1, whatever markup styles its words.
+     */
+    private function headingText(string $html): string
+    {
+        preg_match('/<h1[^>]*>(.*?)<\/h1>/s', $html, $match);
+
+        return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($match[1] ?? ''))));
     }
 }

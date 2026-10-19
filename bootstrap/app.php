@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AddNoindexHeaderInDemoMode;
+use App\Http\Middleware\InlineIconSprite;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(append: [
             AddNoindexHeaderInDemoMode::class,
+            InlineIconSprite::class,
         ]);
 
         // Localized slugs resolve in the request's language, so the locale must be set before route binding.

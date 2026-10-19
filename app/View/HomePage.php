@@ -4,6 +4,7 @@ namespace App\View;
 
 use App\Enums\NewsType;
 use App\Enums\PartnerRole;
+use App\Enums\SessionKind;
 use App\Models\Edition;
 use App\Models\Milestone;
 use App\Models\NewsArticle;
@@ -50,6 +51,34 @@ class HomePage
     public function title(): string
     {
         return $this->edition()?->name ?: __('site.brand');
+    }
+
+    /**
+     * The title split for the hero: the series name, which stays the same every year, then what names this
+     * edition (usually its year). An edition named differently keeps its whole name in `series`.
+     *
+     * @return array{series: string, edition: string}
+     */
+    public function titleParts(): array
+    {
+        $title = $this->title();
+        $brand = __('site.brand');
+
+        if ($title !== $brand && str_starts_with($title, $brand.' ')) {
+            return ['series' => $brand, 'edition' => trim(mb_substr($title, mb_strlen($brand)))];
+        }
+
+        return ['series' => $title, 'edition' => ''];
+    }
+
+    /**
+     * The ten digits in the page's numerals, for the rolling countdown.
+     *
+     * @return list<string>
+     */
+    public function digitStrip(): array
+    {
+        return array_map(fn (int $digit): string => $this->formatter->plain($digit), range(0, 9));
     }
 
     public function dateRange(): ?string
@@ -122,13 +151,30 @@ class HomePage
      */
     public function countdownParts(): array
     {
+        $values = $this->countdownValues();
+
+        return [
+            'days' => $this->formatter->plain($values['days']),
+            'hours' => $this->twoDigits($values['hours']),
+            'minutes' => $this->twoDigits($values['minutes']),
+            'seconds' => $this->twoDigits($values['seconds']),
+        ];
+    }
+
+    /**
+     * Time left until the opening as whole numbers, never negative.
+     *
+     * @return array{days: int, hours: int, minutes: int, seconds: int}
+     */
+    public function countdownValues(): array
+    {
         $seconds = max(0, (int) CarbonImmutable::now()->diffInSeconds($this->opening() ?? CarbonImmutable::now(), false));
 
         return [
-            'days' => $this->formatter->plain(intdiv($seconds, 86400)),
-            'hours' => $this->twoDigits(intdiv($seconds % 86400, 3600)),
-            'minutes' => $this->twoDigits(intdiv($seconds % 3600, 60)),
-            'seconds' => $this->twoDigits($seconds % 60),
+            'days' => intdiv($seconds, 86400),
+            'hours' => intdiv($seconds % 86400, 3600),
+            'minutes' => intdiv($seconds % 3600, 60),
+            'seconds' => $seconds % 60,
         ];
     }
 
@@ -161,11 +207,69 @@ class HomePage
     }
 
     /**
+     * Each direction's share of two-way trade, in percent, from the two route figures ("281.8 m" and "2.72 bn"
+     * become comparable through their English unit suffix). Null when either figure or its unit is missing.
+     *
+     * @return array{bangladesh: float, brazil: float}|null
+     */
+    public function tradeBalance(): ?array
+    {
+        $routes = $this->stats('routes')->keyBy('key');
+        $scale = ['bn' => 1e9, 'm' => 1e6, 'k' => 1e3];
+
+        $amount = function (?Stat $stat) use ($scale): ?float {
+            $unit = $stat === null ? null : trim((string) $stat->getTranslation('suffix', 'en', false));
+
+            return $stat === null || ! isset($scale[$unit]) ? null : (float) $stat->value * $scale[$unit];
+        };
+
+        $bangladesh = $amount($routes->get('bangladesh-to-brazil'));
+        $brazil = $amount($routes->get('brazil-to-bangladesh'));
+
+        if ($bangladesh === null || $brazil === null || $bangladesh + $brazil <= 0) {
+            return null;
+        }
+
+        $share = round($bangladesh / ($bangladesh + $brazil) * 100, 1);
+
+        return ['bangladesh' => $share, 'brazil' => round(100 - $share, 1)];
+    }
+
+    /**
      * @return Collection<int, Sector>
      */
     public function sectors(): Collection
     {
         return $this->once('sectors', fn (): Collection => Sector::query()->ordered()->get());
+    }
+
+    /**
+     * Every edition of the series in order, with what happened at each: exhibitors, B2B afternoons, seminars,
+     * ceremonies and photos (all zero for an edition still to come).
+     *
+     * @return Collection<int, Edition>
+     */
+    public function editions(): Collection
+    {
+        return $this->once('editions', fn (): Collection => Edition::query()
+            ->with(['venue', 'galleryAlbums'])
+            ->withCount([
+                'exhibitors',
+                'galleryPhotos',
+                'programmeSessions as matchmaking_count' => fn ($query) => $query->where('kind', SessionKind::Matchmaking),
+                'programmeSessions as seminar_count' => fn ($query) => $query->where('kind', SessionKind::Seminar),
+                'programmeSessions as ceremony_count' => fn ($query) => $query->where('kind', SessionKind::Ceremony),
+            ])
+            ->orderBy('number')
+            ->get());
+    }
+
+    /**
+     * The latest edition that has taken place, which the programme and highlights look back on.
+     */
+    public function lastPastEdition(): ?Edition
+    {
+        return $this->editions()->filter(fn (Edition $edition): bool => $edition->isPast())->last();
     }
 
     /**

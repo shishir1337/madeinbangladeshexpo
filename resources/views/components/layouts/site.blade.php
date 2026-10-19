@@ -3,7 +3,7 @@
     'description' => null,
     'image' => 'expo25-stand-garments',
     'imageAlt' => null,
-    'smooth' => false,
+    'overlayHeader' => false,
     'noindex' => false,
 ])
 
@@ -39,15 +39,17 @@
     @stack('head')
     {{-- Before first paint: JS flag, motion preference (stored, else the OS setting) and a dismissed announcement. --}}
     <script>(function(d){d.classList.add('js');try{var m=localStorage.getItem('mbe.motion');if(!m&&matchMedia('(prefers-reduced-motion: reduce)').matches){m='reduced'}if(m){d.dataset.motion=m}var announcementKey=d.dataset.announcementKey;if(announcementKey&&localStorage.getItem(announcementKey)==='dismissed'){d.classList.add('announcement-dismissed')}}catch(e){}})(document.documentElement)</script>
+    {{-- Chrome and Edge prerender a page when the pointer rests on its link, so it opens instantly. --}}
+    <script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"selector_matches":"[target], [download], [rel~=nofollow], [data-no-prerender]"}}]},"eagerness":"moderate"}]}</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="font-sans text-ink bg-cream min-h-dvh flex flex-col" @if ($smooth) data-smooth @endif>
+<body class="font-sans text-ink bg-cream min-h-dvh flex flex-col">
     <a id="skip-to-content" href="#main" class="skip-link">{{ __('site.skip_to_content') }}</a>
 
     <x-demo-ribbon />
     <x-site.announcement />
-    <x-site.header />
+    <x-site.header :overlay="$overlayHeader" />
 
     <main id="main" tabindex="-1" class="flex-1 outline-none">
         {{ $slot }}

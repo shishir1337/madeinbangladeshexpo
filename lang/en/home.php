@@ -14,6 +14,8 @@ return [
         'video_note' => 'Plays from YouTube',
         'close_video' => 'Close video',
         'free_badge' => 'Free for trade buyers',
+        'makers' => 'Bangladeshi makers',
+        'buyers' => 'Brazilian buyers',
         'photo_main' => 'Visitors talking with an exhibitor at a garments stall, Made in Bangladesh Expo 2025',
         'photo_delegation' => 'The Bangladeshi delegation at the 2025 expo in São Paulo',
         'photo_speaker' => 'Regina Nunes speaking at the 2025 expo',
@@ -25,6 +27,14 @@ return [
             'sectors' => 'Sectors',
             'sectors_value' => ':count sectors, one hall',
         ],
+    ],
+
+    'ticket' => [
+        'label' => 'Boarding pass',
+        'doors' => 'Doors open',
+        'doors_value' => ':sp São Paulo · :dhaka Dhaka',
+        'now_in' => ':city now',
+        'stub_lead' => 'Trade buyers enter free. Register before you fly and book your meetings in advance.',
     ],
 
     'countdown' => [
@@ -110,6 +120,7 @@ return [
         'bd_items' => 'Apparel · jute goods · leather · home textiles · medicines',
         'br_sells' => 'Brazil sells',
         'br_items' => 'Sugar · cotton · cereals · soy · edible oils',
+        'balance' => 'Of every dollar traded between the two countries in 2025, about :share cents paid for goods Bangladesh sold to Brazil. The expo is here to grow that side.',
         'map_label' => 'Map: the sea route from Chattogram to Santos around the Cape of Good Hope, and the air route from Dhaka to São Paulo through Dubai.',
         'chattogram' => 'Chattogram',
         'dhaka' => 'Dhaka',
@@ -131,6 +142,8 @@ return [
         'venue_page' => 'About the venue',
         'travel_page' => 'Travel and visa',
         'skyline_alt' => 'The São Paulo skyline',
+        'country' => 'Brazil',
+        'links' => ['travel' => 'Travel and visa', 'hotels' => 'Hotels', 'city-guide' => 'City guide'],
     ],
 
     'timeline' => [
@@ -179,9 +192,60 @@ return [
             'media' => 'Media partners',
         ],
         'edition' => ':edition edition',
+        'become' => 'Become a partner',
+        'become_lead' => 'Sponsorship for the next edition',
+    ],
+
+    'programme' => [
+        'eyebrow' => 'At the expo',
+        'title' => 'Four days of doing business',
+        'lead' => 'What happens on the floor, and what the first edition had. The next one builds on it.',
+        'exhibition' => [
+            'title' => 'Exhibition',
+            'body' => 'Bangladeshi manufacturers on their own stands, with samples, catalogues and prices to discuss.',
+            'photo' => 'The STS Apparel stand at the 2025 expo',
+            'count' => 'exhibitor in :year|exhibitors in :year',
+        ],
+        'meetings' => [
+            'title' => 'B2B meetings',
+            'body' => 'Pre-arranged meetings between exhibitors and buyers, booked before the doors open.',
+            'photo' => 'Exhibitors and visitors meeting at an accessories stand in 2025',
+            'count' => 'afternoon of B2B matchmaking in :year|afternoons of B2B matchmaking in :year',
+        ],
+        'seminars' => [
+            'title' => 'Seminars',
+            'body' => 'Sessions on trade and investment between the two countries, market rules, logistics and finance.',
+            'photo' => 'Md. Joynal Abdin speaking at the 2025 expo',
+            'count' => 'seminar in :year|seminars in :year',
+        ],
+        'ceremonies' => [
+            'title' => 'Ceremonies and press',
+            'body' => 'An opening and a closing ceremony with guests of honour, and time with the press.',
+            'photo' => 'Guests of honour at the 2025 expo',
+            'count' => 'ceremony in :year|ceremonies in :year',
+        ],
+    ],
+
+    'editions' => [
+        'eyebrow' => 'The series',
+        'title' => 'One expo, every year',
+        'lead' => 'The Made in Bangladesh Expo comes back to São Paulo edition after edition, each one building on the buyers and contacts of the last.',
+        'status' => ['held' => 'Held', 'current' => 'This edition', 'next' => 'Next'],
+        'stats' => [
+            'exhibitors' => 'exhibitor|exhibitors',
+            'matchmaking' => 'afternoon of B2B meetings|afternoons of B2B meetings',
+            'seminars' => 'seminar|seminars',
+            'photos' => 'photo in the gallery|photos in the gallery',
+        ],
+        'archive' => 'See the :year edition',
+        'current_body' => 'Exhibitors apply for a stall and buyers register for free; the B2B meetings are arranged before the doors open.',
+        'next_title' => 'Next edition',
+        'next_body' => 'Dates and venue are announced here first, as soon as BBCCI confirms them. Sign up and you will hear the moment they are.',
+        'next_cta' => 'Tell me first',
     ],
 
     'cta' => [
+        'eyebrow' => 'See you in São Paulo',
         'title' => 'Be part of the next edition',
         'lead' => 'Book a stall, register as a buyer or join the delegation. Places are limited to one hall.',
         'newsletter_title' => 'Get expo updates',

@@ -14,6 +14,8 @@ return [
         'video_note' => 'Reproduzido pelo YouTube',
         'close_video' => 'Fechar vídeo',
         'free_badge' => 'Gratuito para compradores',
+        'makers' => 'Fabricantes de Bangladesh',
+        'buyers' => 'Compradores do Brasil',
         'photo_main' => 'Visitantes conversam com um expositor em um estande de roupas, Made in Bangladesh Expo 2025',
         'photo_delegation' => 'A delegação de Bangladesh na feira de 2025 em São Paulo',
         'photo_speaker' => 'Regina Nunes discursa na feira de 2025',
@@ -25,6 +27,14 @@ return [
             'sectors' => 'Setores',
             'sectors_value' => ':count setores, um só pavilhão',
         ],
+    ],
+
+    'ticket' => [
+        'label' => 'Cartão de embarque',
+        'doors' => 'Abertura',
+        'doors_value' => ':sp em São Paulo · :dhaka em Daca',
+        'now_in' => 'Agora em :city',
+        'stub_lead' => 'A entrada é gratuita para compradores. Cadastre-se antes da viagem e agende suas reuniões com antecedência.',
     ],
 
     'countdown' => [
@@ -110,6 +120,7 @@ return [
         'bd_items' => 'Roupas · produtos de juta · couro · têxteis para casa · medicamentos',
         'br_sells' => 'O Brasil vende',
         'br_items' => 'Açúcar · algodão · cereais · soja · óleos comestíveis',
+        'balance' => 'De cada dólar negociado entre os dois países em 2025, cerca de :share centavos pagaram produtos que Bangladesh vendeu ao Brasil. A feira existe para fazer esse lado crescer.',
         'map_label' => 'Mapa: a rota marítima de Chattogram a Santos pelo Cabo da Boa Esperança e a rota aérea de Daca a São Paulo via Dubai.',
         'chattogram' => 'Chattogram',
         'dhaka' => 'Daca',
@@ -131,6 +142,8 @@ return [
         'venue_page' => 'Sobre o local',
         'travel_page' => 'Viagem e visto',
         'skyline_alt' => 'O horizonte de São Paulo',
+        'country' => 'Brasil',
+        'links' => ['travel' => 'Viagem e visto', 'hotels' => 'Hotéis', 'city-guide' => 'Guia da cidade'],
     ],
 
     'timeline' => [
@@ -179,9 +192,60 @@ return [
             'media' => 'Parceiros de mídia',
         ],
         'edition' => 'Edição :edition',
+        'become' => 'Seja parceiro',
+        'become_lead' => 'Patrocínio para a próxima edição',
+    ],
+
+    'programme' => [
+        'eyebrow' => 'Na feira',
+        'title' => 'Quatro dias de negócios',
+        'lead' => 'O que acontece no pavilhão e o que a primeira edição teve. A próxima parte daí.',
+        'exhibition' => [
+            'title' => 'Exposição',
+            'body' => 'Fabricantes de Bangladesh em estandes próprios, com amostras, catálogos e preços para negociar.',
+            'photo' => 'O estande da STS Apparel na feira de 2025',
+            'count' => 'expositor em :year|expositores em :year',
+        ],
+        'meetings' => [
+            'title' => 'Rodadas de negócios',
+            'body' => 'Reuniões agendadas entre expositores e compradores, marcadas antes da abertura.',
+            'photo' => 'Expositores e visitantes reunidos em um estande de acessórios em 2025',
+            'count' => 'tarde de rodadas B2B em :year|tardes de rodadas B2B em :year',
+        ],
+        'seminars' => [
+            'title' => 'Seminários',
+            'body' => 'Sessões sobre comércio e investimento entre os dois países, regras de mercado, logística e financiamento.',
+            'photo' => 'Md. Joynal Abdin falando na feira de 2025',
+            'count' => 'seminário em :year|seminários em :year',
+        ],
+        'ceremonies' => [
+            'title' => 'Cerimônias e imprensa',
+            'body' => 'Cerimônias de abertura e de encerramento com convidados de honra, e encontros com a imprensa.',
+            'photo' => 'Convidados de honra na feira de 2025',
+            'count' => 'cerimônia em :year|cerimônias em :year',
+        ],
+    ],
+
+    'editions' => [
+        'eyebrow' => 'A série',
+        'title' => 'Uma feira, todos os anos',
+        'lead' => 'A Made in Bangladesh Expo volta a São Paulo edição após edição, e cada uma aproveita os compradores e contatos da anterior.',
+        'status' => ['held' => 'Realizada', 'current' => 'Esta edição', 'next' => 'Próxima'],
+        'stats' => [
+            'exhibitors' => 'expositor|expositores',
+            'matchmaking' => 'tarde de rodadas B2B|tardes de rodadas B2B',
+            'seminars' => 'seminário|seminários',
+            'photos' => 'foto na galeria|fotos na galeria',
+        ],
+        'archive' => 'Ver a edição de :year',
+        'current_body' => 'Expositores se candidatam a um estande e compradores se cadastram gratuitamente; as rodadas de negócios são agendadas antes da abertura.',
+        'next_title' => 'Próxima edição',
+        'next_body' => 'Datas e local são anunciados aqui primeiro, assim que a BBCCI confirmar. Cadastre-se e saiba na hora.',
+        'next_cta' => 'Quero saber primeiro',
     ],
 
     'cta' => [
+        'eyebrow' => 'Nos vemos em São Paulo',
         'title' => 'Participe da próxima edição',
         'lead' => 'Reserve um estande, credencie-se como comprador ou integre a delegação. As vagas são limitadas a um pavilhão.',
         'newsletter_title' => 'Receba novidades da feira',

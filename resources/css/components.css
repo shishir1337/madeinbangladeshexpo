@@ -182,24 +182,6 @@
     }
 }
 
-@layer components {
-    /* Trade routes: a dash that flows along the path. Disabled by the global reduced-motion rules. */
-    .route-flow {
-        stroke-dasharray: 7 7;
-        animation: route-flow 2.4s linear infinite;
-    }
-
-    .route-flow-fast {
-        animation: route-flow 1.2s linear infinite;
-    }
-
-    @keyframes route-flow {
-        to {
-            stroke-dashoffset: -28;
-        }
-    }
-}
-
 /* A horizontal track that bleeds to the screen edges but starts aligned with .container-site. */
 @utility track-gutter {
     padding-inline: max(1rem, calc((100vw - 82rem) / 2 + min(5vw, 2.75rem)));

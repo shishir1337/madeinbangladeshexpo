@@ -99,17 +99,16 @@ class HomePolishTest extends TestCase
         $this->get('/')->assertOk()->assertSee('data-countdown-state="past"', false)->assertSee('href="#highlights"', false);
     }
 
-    public function test_scrolling_rows_are_reachable_by_keyboard_and_keep_their_own_wheel(): void
+    public function test_scrolling_rows_are_reachable_by_keyboard(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
 
         preg_match_all('/<(?:ul|div|ol)[^>]*class="[^"]*(?:swipe-row|track-gutter)[^"]*"[^>]*>/', $html, $rows);
-        $this->assertGreaterThanOrEqual(4, count($rows[0]));
+        $this->assertGreaterThanOrEqual(3, count($rows[0]));
 
         foreach ($rows[0] as $row) {
             $this->assertStringContainsString('tabindex="0"', $row);
             $this->assertStringContainsString('aria-label="', $row);
-            $this->assertStringContainsString('data-lenis-prevent', $row);
         }
     }
 

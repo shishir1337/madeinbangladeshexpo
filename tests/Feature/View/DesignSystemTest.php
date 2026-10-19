@@ -19,10 +19,23 @@ class DesignSystemTest extends TestCase
             ->assertSee('<meta name="theme-color" content="#004F3A">', false);
     }
 
-    public function test_smooth_scrolling_is_opt_in(): void
+    public function test_pages_keep_native_scrolling(): void
     {
-        $this->assertStringNotContainsString('data-smooth', Blade::render('<x-layouts.site title="Plain">Plain page</x-layouts.site>'));
-        $this->assertStringContainsString('data-smooth', Blade::render('<x-layouts.site title="Marketing" smooth>Marketing page</x-layouts.site>'));
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringNotContainsString('data-smooth', $html);
+        $this->assertStringNotContainsString('lenis', $html);
+    }
+
+    public function test_links_on_the_site_are_prerendered_when_a_visitor_is_about_to_open_them(): void
+    {
+        $html = Blade::render('<x-layouts.site title="Plain">Plain page</x-layouts.site>');
+
+        preg_match('/<script type="speculationrules">(.*?)<\/script>/s', $html, $match);
+        $rules = json_decode($match[1] ?? 'null', true);
+
+        $this->assertSame('moderate', $rules['prerender'][0]['eagerness'] ?? null);
+        $this->assertStringContainsString('[target]', json_encode($rules), 'Links that open a new tab must not be prerendered.');
     }
 
     public function test_os_reduced_motion_is_applied_before_first_paint(): void

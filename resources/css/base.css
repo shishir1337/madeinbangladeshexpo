@@ -48,6 +48,7 @@
 
     /* The display utilities read these variables, so Bangla headings get room for conjuncts and vowel signs. */
     :lang(bn) {
+        --text-display-3xl--line-height: 1.12;
         --text-display-2xl--line-height: 1.16;
         --text-display-xl--line-height: 1.2;
         --text-display-lg--line-height: 1.24;

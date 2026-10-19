@@ -15,8 +15,16 @@ export function registerComponents(Alpine) {
     Alpine.data('countdown', (targetIso) => ({
         target: Date.parse(targetIso),
         parts: { days: '', hours: '', minutes: '', seconds: '' },
+        values: { days: 0, hours: 0, minutes: 0, seconds: 0 },
         paused: false,
         timer: null,
+
+        /**
+         * One digit (0–9) of a unit, zero-padded to `width` columns, for the rolling digit strips.
+         */
+        digit(unit, width, index) {
+            return Number(String(this.values[unit]).padStart(width, '0').slice(-width)[index]);
+        },
 
         init() {
             this.whole = numberFormat();
@@ -36,6 +44,13 @@ export function registerComponents(Alpine) {
 
         tick() {
             const seconds = Math.max(0, Math.floor((this.target - Date.now()) / 1000));
+
+            this.values = {
+                days: Math.floor(seconds / 86400),
+                hours: Math.floor((seconds % 86400) / 3600),
+                minutes: Math.floor((seconds % 3600) / 60),
+                seconds: seconds % 60,
+            };
 
             this.parts = {
                 days: this.whole.format(Math.floor(seconds / 86400)),

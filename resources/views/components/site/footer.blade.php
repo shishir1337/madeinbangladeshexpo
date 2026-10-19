@@ -10,7 +10,7 @@
 
 <footer data-tone="midnight" class="relative isolate overflow-hidden bg-midnight text-white">
     <x-ui.motif variant="band" class="block h-6 w-full text-midnight-3" style="--motif-bg: #071a33" />
-    <div class="absolute -top-40 left-1/2 -z-10 h-80 w-[60rem] -translate-x-1/2 rounded-full bg-green/25 blur-3xl" aria-hidden="true"></div>
+    <div class="absolute inset-x-0 top-0 -z-10 h-[32rem] bg-[radial-gradient(50%_60%_at_50%_0%,rgb(0_79_58/0.32),transparent_70%)]" aria-hidden="true"></div>
 
     <div class="container-site grid gap-12 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16 lg:py-20">
         <div>
@@ -98,6 +98,17 @@
                 <span>{{ __('site.motion.reduce') }}</span>
             </button>
         </div>
+    </div>
+
+    {{-- The sign-off: the expo's mark and name at full width. --}}
+    <div class="container-site flex items-end gap-[3vw] overflow-hidden pt-6 pb-10" aria-hidden="true">
+        <svg class="mb-[1.2vw] w-[clamp(3.5rem,11vw,9.5rem)] shrink-0" viewBox="0 0 40 30" focusable="false">
+            <circle cx="15" cy="15" r="11" fill="#e8283f" />
+            <circle cx="25" cy="15" r="11" fill="#2456d6" />
+            <path d="M20 5.4a11 11 0 0 1 0 19.2 11 11 0 0 1 0-19.2Z" fill="#004f3a" />
+            <path d="M20 11.2 23.8 15 20 18.8 16.2 15Z" fill="#ffdf00" />
+        </svg>
+        <p class="min-w-0 font-display text-[clamp(2.6rem,8.6vw,8.25rem)] leading-[0.86] font-bold tracking-[-0.045em] text-balance text-white/[0.09]">{{ __('site.brand') }}</p>
     </div>
 
     <div class="border-t border-white/10">

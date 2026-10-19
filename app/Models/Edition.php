@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -34,6 +36,43 @@ class Edition extends Model
     public function venue(): BelongsTo
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    /**
+     * @return HasMany<Exhibitor, $this>
+     */
+    public function exhibitors(): HasMany
+    {
+        return $this->hasMany(Exhibitor::class);
+    }
+
+    /**
+     * @return HasMany<ProgrammeSession, $this>
+     */
+    public function programmeSessions(): HasMany
+    {
+        return $this->hasMany(ProgrammeSession::class);
+    }
+
+    /**
+     * @return HasMany<GalleryAlbum, $this>
+     */
+    public function galleryAlbums(): HasMany
+    {
+        return $this->hasMany(GalleryAlbum::class)->orderBy('sort');
+    }
+
+    /**
+     * @return HasManyThrough<GalleryPhoto, GalleryAlbum, $this>
+     */
+    public function galleryPhotos(): HasManyThrough
+    {
+        return $this->hasManyThrough(GalleryPhoto::class, GalleryAlbum::class);
+    }
+
+    public function isPast(): bool
+    {
+        return $this->status === EditionStatus::Archived || $this->ends_on?->isPast() === true;
     }
 
     /**

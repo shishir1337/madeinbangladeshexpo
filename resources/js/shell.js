@@ -2,14 +2,22 @@
  * Alpine components for the site shell. Registered before Livewire starts Alpine.
  */
 export function registerShell(Alpine) {
-    Alpine.data('siteHeader', () => ({
+    /**
+     * `overlay`: the header starts transparent over a dark hero and turns solid after a short scroll.
+     */
+    Alpine.data('siteHeader', (overlay = false) => ({
+        overlay,
         open: null,
         drawer: false,
         scrolled: false,
 
         init() {
             const onScroll = () => {
-                this.scrolled = window.scrollY > 24;
+                const scrolled = window.scrollY > 24;
+
+                if (scrolled !== this.scrolled) {
+                    this.scrolled = scrolled;
+                }
             };
 
             onScroll();

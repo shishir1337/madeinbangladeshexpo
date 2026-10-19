@@ -28,6 +28,11 @@ class GeneralSettings extends Settings
     public string $email;
 
     /**
+     * The organiser's own website (the chamber), as opposed to this expo site.
+     */
+    public string $website;
+
+    /**
      * Data protection officer (LGPD "encarregado"); not yet named by BBCCI.
      */
     public ?string $dpo_name;

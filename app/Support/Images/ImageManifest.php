@@ -33,6 +33,23 @@ class ImageManifest
     }
 
     /**
+     * The absolute URL of an image's largest rendition up to the preferred width, e.g. for Open Graph cards.
+     */
+    public function url(string $key, int $preferredWidth = 1200, string $format = 'jpg'): ?string
+    {
+        $entry = $this->get($key);
+
+        if ($entry === null) {
+            return null;
+        }
+
+        $fitting = array_filter($entry['widths'], fn (int $width): bool => $width <= $preferredWidth);
+        $width = $fitting === [] ? min($entry['widths']) : max($fitting);
+
+        return asset("img/{$key}-{$width}.{$format}");
+    }
+
+    /**
      * @return array<string, array{w: int, h: int, widths: list<int>}>
      */
     public function all(): array

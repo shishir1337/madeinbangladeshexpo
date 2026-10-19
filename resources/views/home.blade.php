@@ -4,6 +4,10 @@
 @endphp
 
 <x-layouts.site :title="$documentTitle" :description="__('home.meta_description')" smooth>
+    @push('head')
+        <x-seo.json-ld :data="$page->structuredData($settings)" />
+    @endpush
+
     @include('home.hero')
     @include('home.countdown')
     @include('home.paths')

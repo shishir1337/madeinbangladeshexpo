@@ -10,8 +10,11 @@ use App\Models\Sector;
 use App\Models\Stat;
 use App\Models\Testimonial;
 use App\Models\Video;
+use App\Settings\GeneralSettings;
 use App\Support\Editions\CurrentEdition;
+use App\Support\Images\ImageManifest;
 use App\Support\Localization\LocaleFormatter;
+use App\Support\Localization\Locales;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
@@ -191,6 +194,75 @@ class HomePage
         return collect(PartnerRole::cases())
             ->mapWithKeys(fn (PartnerRole $role): array => [$role->value => $partners->where('role', $role)->values()])
             ->filter(fn (Collection $group): bool => $group->isNotEmpty());
+    }
+
+    /**
+     * schema.org data for search engines: the organiser always, and the current edition as an ExhibitionEvent.
+     *
+     * @return array<string, mixed>
+     */
+    public function structuredData(GeneralSettings $settings): array
+    {
+        $organisation = [
+            '@type' => 'Organization',
+            '@id' => $settings->website.'#organization',
+            'name' => $settings->organiser_name,
+            'alternateName' => $settings->organiser_short_name,
+            'url' => $settings->website,
+            'logo' => app(ImageManifest::class)->url('bbcci-mark', 480),
+            'address' => ['@type' => 'PostalAddress', 'streetAddress' => $settings->office_address, 'addressCountry' => 'BD'],
+            'contactPoint' => [
+                '@type' => 'ContactPoint',
+                'contactType' => 'customer service',
+                'telephone' => $settings->phone,
+                'email' => $settings->email,
+                'availableLanguage' => ['en', 'pt', 'bn'],
+            ],
+        ];
+
+        $graph = [$organisation];
+        $edition = $this->edition();
+
+        if ($edition !== null) {
+            $venue = $edition->venue;
+            $opening = $this->opening()->setTimezone($edition->timezone);
+
+            $graph[] = array_filter([
+                '@type' => 'ExhibitionEvent',
+                'name' => $this->title(),
+                'description' => __('home.meta_description'),
+                'startDate' => $opening->format('Y-m-d\TH:i:sP'),
+                'endDate' => $edition->ends_on->toDateString(),
+                'eventStatus' => 'https://schema.org/EventScheduled',
+                'eventAttendanceMode' => 'https://schema.org/OfflineEventAttendanceMode',
+                'inLanguage' => app(Locales::class)->current()->hreflang,
+                'image' => app(ImageManifest::class)->url('expo25-stand-garments'),
+                'url' => url()->current(),
+                'organizer' => ['@id' => $settings->website.'#organization', 'name' => $settings->organiser_name, 'url' => $settings->website],
+                'location' => $venue === null ? null : [
+                    '@type' => 'Place',
+                    'name' => $venue->name,
+                    'address' => array_filter([
+                        '@type' => 'PostalAddress',
+                        'streetAddress' => $venue->address_line,
+                        'addressLocality' => $venue->city,
+                        'addressRegion' => $venue->state,
+                        'postalCode' => $venue->postal_code,
+                        'addressCountry' => $venue->country_code,
+                    ]),
+                ],
+                'offers' => [
+                    '@type' => 'Offer',
+                    'name' => __('home.hero.facts.buyers'),
+                    'price' => '0',
+                    'priceCurrency' => 'BRL',
+                    'availability' => 'https://schema.org/InStock',
+                    'url' => url()->current(),
+                ],
+            ]);
+        }
+
+        return ['@context' => 'https://schema.org', '@graph' => $graph];
     }
 
     public function formatter(): LocaleFormatter

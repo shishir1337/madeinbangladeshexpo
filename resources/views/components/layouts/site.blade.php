@@ -1,10 +1,12 @@
 @props([
     'title',
     'description' => null,
+    'image' => 'expo25-stand-garments',
     'smooth' => false,
 ])
 
 @inject('shell', 'App\View\SiteShell')
+@inject('images', 'App\Support\Images\ImageManifest')
 
 @php
     $announcementKey = $shell->edition() ? 'mbe.announcement.'.$shell->edition()->slug : null;
@@ -27,7 +29,9 @@
     @if ($currentLocale->key === 'bn')
         <link rel="preload" href="{{ asset('fonts/anek-bangla-bengali-wght.woff2') }}" as="font" type="font/woff2" crossorigin>
     @endif
+    <x-seo.meta :title="$title" :description="$description" :image="$images->url($image)" />
     <x-seo.alternates />
+    @stack('head')
     {{-- Before first paint: JS flag, motion preference (stored, else the OS setting) and a dismissed announcement. --}}
     <script>(function(d){d.classList.add('js');try{var m=localStorage.getItem('mbe.motion');if(!m&&matchMedia('(prefers-reduced-motion: reduce)').matches){m='reduced'}if(m){d.dataset.motion=m}var announcementKey=d.dataset.announcementKey;if(announcementKey&&localStorage.getItem(announcementKey)==='dismissed'){d.classList.add('announcement-dismissed')}}catch(e){}})(document.documentElement)</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

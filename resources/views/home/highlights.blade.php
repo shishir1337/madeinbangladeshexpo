@@ -29,7 +29,7 @@
 
     @if ($videos->isNotEmpty())
         <h3 class="mt-16 font-display text-display-sm font-semibold text-navy">{{ __('home.highlights.videos') }}</h3>
-        <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="swipe-row mt-6 gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($videos->take(3) as $video)
                 <x-ui.youtube :id="$video->youtube_id" :title="$video->title" :poster="$video->poster" :caption="$video->speaker" />
             @endforeach
@@ -38,7 +38,7 @@
 
     @if ($testimonials->isNotEmpty())
         <h3 class="mt-16 font-display text-display-sm font-semibold text-navy">{{ __('home.highlights.quotes') }}</h3>
-        <div class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div class="swipe-row mt-6 gap-5 sm:grid md:grid-cols-2 xl:grid-cols-3">
             @foreach ($testimonials as $testimonial)
                 <figure @class([
                     'flex flex-col rounded-[1.75rem] p-7',

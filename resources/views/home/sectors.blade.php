@@ -14,7 +14,7 @@
             @endif
         </div>
 
-        <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul class="swipe-row mt-12 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($sectors as $sector)
                 <li data-reveal data-reveal-delay="{{ ($loop->index % 3) * 0.06 }}">
                     <x-ui.card

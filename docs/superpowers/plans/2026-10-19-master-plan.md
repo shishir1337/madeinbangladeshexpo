@@ -35,6 +35,25 @@ This is the roadmap. Each phase gets its own task-by-task plan (`docs/superpower
 
 Phase 13 (pitch packaging) always happens.
 
+## Re-prioritisation (user decision, 2026-10-19)
+
+The user's words: "build that first just with better UI UX, and the informations you get from there main website accordingly we can do the dashboards later since its just a demo which needs to show". The user also handed every remaining design call to the builder ("do plesae on your own").
+
+**New order:** first everything the competitor shows publicly, built better; then the dashboards.
+
+1. **Release A (now): the public site and registration.**
+   - Phase 1, design system and shell. There is no style-tile gate; the builder picks the direction from spec §6.
+   - Phase 2, home.
+   - Phase 3, core pages.
+   - Phase 4, participation and travel pages.
+   - Phase 5, visitor registration and badges.
+   - Phase 6, accounts and exhibitor application.
+   - Then Phase 13's staging deploy, so the client can see it.
+2. **Release B (later): the dashboards.** Phases 7–12: console, finance, exhibitor portal, visa desk, association portal, matchmaking.
+3. **Then:** Phases 14–19, as before.
+
+User reviews of plans and per-phase demos are no longer gates. The builder proceeds phase to phase, and the user sees the result in the browser.
+
 ## Phase map
 
 ```

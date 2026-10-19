@@ -38,22 +38,32 @@ class RouteSlugs
         $locales = app(Locales::class);
         $localeKey = self::$registeringLocale ?? app()->getLocale();
         $translatesSlugs = $locales->has($localeKey) && $locales->get($localeKey)->translatesSlugs;
-        $line = "routes.{$key}";
 
-        if ($translatesSlugs && Lang::hasForLocale($line, $localeKey)) {
-            return Lang::get($line, [], $localeKey);
+        if ($translatesSlugs && filled($slug = self::line($key, $localeKey))) {
+            return $slug;
         }
 
         $defaultKey = $locales->default()->key;
 
-        if (Lang::hasForLocale($line, $defaultKey)) {
+        if (filled($slug = self::line($key, $defaultKey))) {
             if ($translatesSlugs) {
                 Log::warning("Missing [{$localeKey}] route slug [{$key}]; using the [{$defaultKey}] slug.");
             }
 
-            return Lang::get($line, [], $defaultKey);
+            return $slug;
         }
 
         return $key;
+    }
+
+    /**
+     * The routes.{key} line for exactly this locale, or null when it is missing. A blank line counts as
+     * missing, so a half-translated file can never register a route over its locale's home page.
+     */
+    private static function line(string $key, string $localeKey): ?string
+    {
+        $line = "routes.{$key}";
+
+        return Lang::hasForLocale($line, $localeKey) ? trim((string) Lang::get($line, [], $localeKey)) : null;
     }
 }

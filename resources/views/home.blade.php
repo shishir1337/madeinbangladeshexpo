@@ -1,4 +1,4 @@
-@php($eventName = $edition?->name ?? config('app.name'))
+@php($eventName = $edition?->name ?: config('app.name'))
 
 <x-layouts.site :title="$eventName">
     <main>

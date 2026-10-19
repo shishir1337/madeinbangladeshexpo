@@ -11,16 +11,16 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Seed the application's database. Safe to run repeatedly.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (app()->isLocal()) {
+            User::firstOrCreate(
+                ['email' => 'test@example.com'],
+                User::factory()->raw(['name' => 'Test User', 'email' => 'test@example.com']),
+            );
+        }
 
         $this->call([
             StaffRoleSeeder::class,

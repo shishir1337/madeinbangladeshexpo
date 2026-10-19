@@ -62,6 +62,37 @@ class LocalizedRoutingTest extends TestCase
         ];
     }
 
+    #[DataProvider('offSiteTargets')]
+    public function test_legacy_redirect_never_leaves_the_site(string $request): void
+    {
+        $location = $this->get($request)->assertStatus(301)->headers->get('Location');
+
+        $this->assertSame('localhost', parse_url($location, PHP_URL_HOST));
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function offSiteTargets(): array
+    {
+        return [
+            'absolute url after en' => ['/en/https://evil.example/phish'],
+            'encoded slashes after en' => ['/en/https:%2F%2Fevil.example/phish'],
+            'protocol-relative after EN' => ['/EN//evil.example/phish'],
+        ];
+    }
+
+    public function test_blank_portuguese_slug_falls_back_and_never_replaces_the_home_page(): void
+    {
+        Lang::addLines(['routes.about' => ''], 'pt_BR');
+        Lang::addLines(['routes.about' => 'about'], 'en');
+        Route::localized(fn () => Route::get(localized_slug('about'), fn () => app()->getLocale())->name('about'));
+        Route::getRoutes()->refreshNameLookups();
+
+        $this->get('/pt')->assertOk()->assertSee('<html lang="pt-BR"', false);
+        $this->get('/pt/about')->assertOk()->assertSee('pt_BR');
+    }
+
     public function test_translated_slugs_resolve_in_each_locale(): void
     {
         $this->registerAboutRoute();

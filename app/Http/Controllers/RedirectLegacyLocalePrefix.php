@@ -32,7 +32,8 @@ class RedirectLegacyLocalePrefix extends Controller
     public function __invoke(string $legacyPrefix, ?string $path = null): RedirectResponse
     {
         $target = $this->locales->get(self::LEGACY_PREFIXES[$legacyPrefix]);
-        $url = url(trim(($target->prefix ?? '').'/'.($path ?? ''), '/'));
+        // The leading slash keeps the target on this site: url() returns absolute URLs untouched.
+        $url = url('/'.trim(($target->prefix ?? '').'/'.($path ?? ''), '/'));
         $queryString = request()->getQueryString();
 
         return redirect()->to($queryString === null ? $url : "{$url}?{$queryString}", 301);

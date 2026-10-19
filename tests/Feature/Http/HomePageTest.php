@@ -51,6 +51,17 @@ class HomePageTest extends TestCase
             ->assertSee('Organised by');
     }
 
+    public function test_home_never_shows_an_empty_heading_when_the_name_has_no_english_version(): void
+    {
+        Edition::factory()->current()->create(['name' => ['pt_BR' => 'Feira Made in Bangladesh']]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('<h1></h1>', false)
+            ->assertDontSee('<title></title>', false)
+            ->assertSee('<h1>'.config('app.name').'</h1>', false);
+    }
+
     private function createCurrentEdition(): Edition
     {
         return Edition::factory()

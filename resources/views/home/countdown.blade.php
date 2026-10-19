@@ -51,6 +51,7 @@
                     @else
                         <p class="eyebrow !text-mint">{{ __('home.countdown.past') }}</p>
                         <p class="mt-4 max-w-lg text-lead text-white/80">{{ __('home.countdown.past_lead') }}</p>
+                        <x-ui.link href="#highlights" icon="arrow-down" class="mt-6">{{ __('home.countdown.past_cta') }}</x-ui.link>
                     @endif
                 </div>
 

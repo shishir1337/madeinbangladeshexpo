@@ -22,6 +22,7 @@ class VideoSeeder extends Seeder
             [
                 'youtube_id' => 'AhCawT3n2Uo',
                 'poster' => 'expo25-welcome',
+                'is_featured' => true,
                 'edition_id' => $edition2025,
                 'title' => ['en' => 'Made in Bangladesh Expo 2025 in São Paulo', 'pt_BR' => 'Made in Bangladesh Expo 2025 em São Paulo', 'bn' => 'সাও পাওলোতে মেইড ইন বাংলাদেশ এক্সপো ২০২৫'],
             ],

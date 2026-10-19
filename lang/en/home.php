@@ -33,6 +33,7 @@ return [
         'live_lead' => 'The expo is open in São Paulo today.',
         'past' => 'This edition has closed',
         'past_lead' => 'Thank you to every exhibitor and buyer. The next dates will be announced here.',
+        'past_cta' => 'See how the edition went',
         'opening' => 'Opening: :sp in São Paulo, :dhaka in Dhaka',
         'days' => 'days',
         'hours' => 'hours',
@@ -148,6 +149,7 @@ return [
         'videos' => 'Watch',
         'quotes' => 'What they said',
         'archive' => 'See the 2025 edition',
+        'gallery' => 'Browse all the photos',
         'photos' => [
             'expo25-welcome' => 'BBCCI leaders and guests at the welcome gate of the 2025 expo',
             'expo25-stand-accessories' => 'Exhibitors and visitors at an accessories stall',
@@ -156,6 +158,16 @@ return [
             'expo25-guests' => 'Guests of honour at the 2025 expo',
             'expo25-speaker-saiful-alam' => 'Md. Saiful Alam, Vice President of BBCCI, speaking at the expo',
         ],
+    ],
+
+    'press' => [
+        'eyebrow' => 'In the news',
+        'title' => 'What the press said',
+        'lead' => 'The 2025 expo was covered in Bangladesh and Brazil. Every report opens on the publisher\'s own site.',
+        'all' => 'All news',
+        'read' => 'Read on :source',
+        'new_tab' => '(opens in a new tab)',
+        'types' => ['news' => 'News', 'press_release' => 'Press release', 'coverage' => 'In the media'],
     ],
 
     'partners' => [

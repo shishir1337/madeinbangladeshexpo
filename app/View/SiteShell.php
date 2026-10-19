@@ -41,7 +41,7 @@ class SiteShell
     {
         $venue = $this->edition()?->venue;
 
-        return $venue === null ? null : "{$venue->name}, {$venue->city}";
+        return $venue === null ? null : "{$venue->name}, {$venue->cityName()}";
     }
 
     /**

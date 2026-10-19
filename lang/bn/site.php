@@ -7,6 +7,7 @@ return [
     'demo_ribbon' => 'ডেমো সাইট',
     'language' => 'ভাষা',
     'organised_by' => 'আয়োজক: :organiser',
+    'photo_credit' => 'ছবি: :name',
     'home' => 'হোম',
     'breadcrumb' => 'পৃষ্ঠার অবস্থান',
 

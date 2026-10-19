@@ -9,7 +9,7 @@
 
     $facts = array_values(array_filter([
         ['icon' => 'calendar', 'label' => __('pages/archive.facts.dates'), 'value' => $formatter->dateRange($edition->starts_on, $edition->ends_on)],
-        $edition->venue ? ['icon' => 'map-pin', 'label' => __('pages/archive.facts.venue'), 'value' => "{$edition->venue->name}, {$edition->venue->city}"] : null,
+        $edition->venue ? ['icon' => 'map-pin', 'label' => __('pages/archive.facts.venue'), 'value' => "{$edition->venue->name}, {$edition->venue->cityName()}"] : null,
         ['icon' => 'store', 'label' => __('pages/archive.facts.exhibitors'), 'value' => $formatter->number($exhibitors->count())],
         $days->isNotEmpty() ? ['icon' => 'clock', 'label' => __('pages/archive.facts.days'), 'value' => $formatter->number($days->count())] : null,
     ]));

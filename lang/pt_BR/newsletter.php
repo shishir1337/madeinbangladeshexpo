@@ -28,9 +28,22 @@ return [
         'signature' => 'Câmara de Comércio e Indústria Brasil Bangladesh (BBCCI)',
     ],
 
+    'confirm' => [
+        'title' => 'Confirme sua inscrição',
+        'lead' => 'Falta um passo: clique no botão para começar a receber datas, prazos e notícias da feira no seu idioma.',
+        'button' => 'Sim, quero receber',
+    ],
+
     'confirmed' => [
         'title' => 'Inscrição confirmada',
         'lead' => 'Obrigado. Você vai receber datas, prazos e notícias da feira no seu idioma e pode cancelar a partir de qualquer e-mail nosso.',
+    ],
+
+    'unsubscribe_invalid' => [
+        'title' => 'Este link de cancelamento não é válido',
+        'lead' => 'Ele pode ter sido copiado pela metade. Escreva para nós e removeremos seu endereço imediatamente.',
+        'write' => 'Pedir a remoção',
+        'subject' => 'Por favor, remova-me das novidades da feira',
     ],
 
     'expired' => [

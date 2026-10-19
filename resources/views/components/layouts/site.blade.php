@@ -2,7 +2,9 @@
     'title',
     'description' => null,
     'image' => 'expo25-stand-garments',
+    'imageAlt' => null,
     'smooth' => false,
+    'noindex' => false,
 ])
 
 @inject('shell', 'App\View\SiteShell')
@@ -21,6 +23,9 @@
     @if ($description)
         <meta name="description" content="{{ $description }}">
     @endif
+    @if ($noindex)
+        <meta name="robots" content="noindex, follow">
+    @endif
     <meta name="theme-color" content="#004F3A">
     <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
@@ -29,7 +34,7 @@
     @if ($currentLocale->key === 'bn')
         <link rel="preload" href="{{ asset('fonts/anek-bangla-bengali-wght.woff2') }}" as="font" type="font/woff2" crossorigin>
     @endif
-    <x-seo.meta :title="$title" :description="$description" :image="$images->url($image)" />
+    <x-seo.meta :title="$title" :description="$description" :image="$images->url($image)" :image-alt="$imageAlt" />
     <x-seo.alternates />
     @stack('head')
     {{-- Before first paint: JS flag, motion preference (stored, else the OS setting) and a dismissed announcement. --}}

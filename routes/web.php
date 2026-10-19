@@ -30,8 +30,8 @@ Route::localized(function (): void {
         Route::get(localized_slug($page), PageInPreparationController::class)->name($page);
     }
 
-    Route::get(localized_slug('newsletter').'/{subscription}/confirm', [NewsletterController::class, 'confirm'])->name('newsletter.confirm');
-    Route::get(localized_slug('newsletter').'/{subscription}/unsubscribe', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
+    Route::match(['get', 'post'], localized_slug('newsletter').'/{subscription}/confirm', [NewsletterController::class, 'confirm'])->whereNumber('subscription')->name('newsletter.confirm');
+    Route::get(localized_slug('newsletter').'/{subscription}/unsubscribe', [NewsletterController::class, 'unsubscribe'])->whereNumber('subscription')->name('newsletter.unsubscribe');
 });
 
 Route::get('_styleguide', StyleguideController::class)->name('styleguide');

@@ -5,7 +5,7 @@
 @inject('shell', 'App\View\SiteShell')
 
 @php
-    $city = $shell->edition()?->venue?->city;
+    $city = $shell->edition()?->venue?->cityName();
 @endphp
 
 <a

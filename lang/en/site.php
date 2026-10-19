@@ -7,6 +7,7 @@ return [
     'demo_ribbon' => 'Demonstration site',
     'language' => 'Language',
     'organised_by' => 'Organised by :organiser',
+    'photo_credit' => 'Photo: :name',
     'home' => 'Home',
     'breadcrumb' => 'Breadcrumb',
 

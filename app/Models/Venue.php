@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Lang;
 use Spatie\Translatable\HasTranslations;
 
 #[Fillable(['name', 'address_line', 'district', 'city', 'state', 'postal_code', 'country_code', 'phone', 'website', 'highlights', 'latitude', 'longitude'])]
@@ -36,6 +37,16 @@ class Venue extends Model
         $cityState = $this->state ? "{$this->city}-{$this->state}" : $this->city;
 
         return collect([$this->address_line, $this->district, $cityState, $this->postal_code])->filter()->implode(', ');
+    }
+
+    /**
+     * The city as written in the current language, e.g. "সাও পাওলো" in Bangla; the stored name otherwise.
+     */
+    public function cityName(): string
+    {
+        $key = "places.cities.{$this->city}";
+
+        return Lang::has($key) ? __($key) : $this->city;
     }
 
     /**

@@ -91,7 +91,7 @@
                 <div class="aspect-[4/5] overflow-hidden rounded-[2rem] shadow-lift">
                     <x-ui.img key="sao-paulo-skyline" :alt="__('pages/about.sao_paulo.image_alt')" sizes="(min-width: 1024px) 45vw, 100vw" class="size-full object-cover" />
                 </div>
-                <p class="mt-3 text-xs text-ink-soft">Photo: Kaique Rocha / Pexels</p>
+                <p class="mt-3 text-xs text-ink-soft">{{ __('site.photo_credit', ['name' => 'Kaique Rocha / Pexels']) }}</p>
             </div>
         </div>
     </x-ui.section>

@@ -33,6 +33,7 @@ return [
         'live_lead' => 'A feira está aberta hoje em São Paulo.',
         'past' => 'Esta edição foi encerrada',
         'past_lead' => 'Obrigado a todos os expositores e compradores. As próximas datas serão anunciadas aqui.',
+        'past_cta' => 'Veja como foi a edição',
         'opening' => 'Abertura: :sp em São Paulo, :dhaka em Daca',
         'days' => 'dias',
         'hours' => 'horas',
@@ -148,6 +149,7 @@ return [
         'videos' => 'Assista',
         'quotes' => 'O que disseram',
         'archive' => 'Veja a edição 2025',
+        'gallery' => 'Ver todas as fotos',
         'photos' => [
             'expo25-welcome' => 'Líderes da BBCCI e convidados na entrada da feira de 2025',
             'expo25-stand-accessories' => 'Expositores e visitantes em um estande de acessórios',
@@ -156,6 +158,16 @@ return [
             'expo25-guests' => 'Convidados de honra na feira de 2025',
             'expo25-speaker-saiful-alam' => 'Md. Saiful Alam, vice-presidente da BBCCI, discursa na feira',
         ],
+    ],
+
+    'press' => [
+        'eyebrow' => 'Na imprensa',
+        'title' => 'O que a imprensa disse',
+        'lead' => 'A feira de 2025 foi notícia em Bangladesh e no Brasil. Cada matéria abre no site do próprio veículo.',
+        'all' => 'Todas as notícias',
+        'read' => 'Ler em :source',
+        'new_tab' => '(abre em nova aba)',
+        'types' => ['news' => 'Notícia', 'press_release' => 'Release', 'coverage' => 'Na mídia'],
     ],
 
     'partners' => [

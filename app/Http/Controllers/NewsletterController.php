@@ -9,17 +9,29 @@ use Illuminate\Http\Response;
 class NewsletterController extends Controller
 {
     /**
-     * Confirm a subscription from the signed link in the confirmation mail. A tampered or expired link
-     * shows a friendly page (403) and changes nothing.
+     * The signed link in the confirmation mail. Opening it shows a button (GET), and only pressing it confirms
+     * (POST), so mail scanners that follow links cannot subscribe anyone. The signature is checked before the
+     * id is looked up, so a forged link never reveals whether an id exists.
      */
-    public function confirm(Request $request, NewsletterSubscription $subscription): Response
+    public function confirm(Request $request, string $subscription): Response
     {
         if (! $request->hasValidSignature()) {
             return response()->view('newsletter.expired', status: 403);
         }
 
-        if ($subscription->confirmed_at === null || $subscription->unsubscribed_at !== null) {
-            $subscription->update(['confirmed_at' => now(), 'unsubscribed_at' => null]);
+        $record = NewsletterSubscription::findOrFail($subscription);
+
+        if (! $record->canBeConfirmed()) {
+            return response()->view('newsletter.expired', status: 403);
+        }
+
+        if ($request->isMethod('GET')) {
+            return response()->view('newsletter.confirm', ['action' => $request->fullUrl()]);
+        }
+
+        if (! $record->isConfirmed()) {
+            $record->update(['confirmed_at' => now(), 'unsubscribed_at' => null]);
+            $record->recordConsent('confirmed');
         }
 
         return response()->view('newsletter.confirmed');
@@ -28,14 +40,17 @@ class NewsletterController extends Controller
     /**
      * Unsubscribe from the signed link in every newsletter mail.
      */
-    public function unsubscribe(Request $request, NewsletterSubscription $subscription): Response
+    public function unsubscribe(Request $request, string $subscription): Response
     {
         if (! $request->hasValidSignature()) {
-            return response()->view('newsletter.expired', status: 403);
+            return response()->view('newsletter.unsubscribe-invalid', status: 403);
         }
 
-        if ($subscription->unsubscribed_at === null) {
-            $subscription->update(['unsubscribed_at' => now()]);
+        $record = NewsletterSubscription::findOrFail($subscription);
+
+        if ($record->unsubscribed_at === null) {
+            $record->update(['unsubscribed_at' => now()]);
+            $record->recordConsent('unsubscribed');
         }
 
         return response()->view('newsletter.unsubscribed');

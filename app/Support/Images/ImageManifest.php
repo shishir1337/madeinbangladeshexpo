@@ -50,6 +50,24 @@ class ImageManifest
     }
 
     /**
+     * One photo for the lightbox viewer: a large JPEG, a WebP srcset, its size and caption.
+     *
+     * @return array{src: ?string, srcset: string, width: ?int, height: ?int, caption: string}
+     */
+    public function lightboxPhoto(string $key, string $caption): array
+    {
+        $entry = $this->get($key);
+
+        return [
+            'src' => $this->url($key, 1600),
+            'srcset' => collect($entry['widths'] ?? [])->map(fn (int $width): string => asset("img/{$key}-{$width}.webp")." {$width}w")->implode(', '),
+            'width' => $entry['w'] ?? null,
+            'height' => $entry['h'] ?? null,
+            'caption' => $caption,
+        ];
+    }
+
+    /**
      * @return array<string, array{w: int, h: int, widths: list<int>}>
      */
     public function all(): array

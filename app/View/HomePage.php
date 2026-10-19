@@ -2,9 +2,11 @@
 
 namespace App\View;
 
+use App\Enums\NewsType;
 use App\Enums\PartnerRole;
 use App\Models\Edition;
 use App\Models\Milestone;
+use App\Models\NewsArticle;
 use App\Models\Partner;
 use App\Models\Sector;
 use App\Models\Stat;
@@ -27,6 +29,13 @@ use Illuminate\Support\Collection as SupportCollection;
 class HomePage
 {
     private const OPENING_HOUR = '10:00';
+
+    /**
+     * Query results already loaded for this request, so partials that share data never query twice.
+     *
+     * @var array<string, mixed>
+     */
+    private array $loaded = [];
 
     public function __construct(
         private CurrentEdition $currentEdition,
@@ -54,7 +63,7 @@ class HomePage
     {
         $venue = $this->edition()?->venue;
 
-        return $venue === null ? null : "{$venue->name}, {$venue->city}";
+        return $venue === null ? null : "{$venue->name}, {$venue->cityName()}";
     }
 
     /**
@@ -148,7 +157,7 @@ class HomePage
      */
     public function stats(string $placement = 'home'): Collection
     {
-        return Stat::query()->where('placement', $placement)->ordered()->get();
+        return $this->once("stats.{$placement}", fn (): Collection => Stat::query()->where('placement', $placement)->ordered()->get());
     }
 
     /**
@@ -156,7 +165,7 @@ class HomePage
      */
     public function sectors(): Collection
     {
-        return Sector::query()->ordered()->get();
+        return $this->once('sectors', fn (): Collection => Sector::query()->ordered()->get());
     }
 
     /**
@@ -164,7 +173,7 @@ class HomePage
      */
     public function milestones(): Collection
     {
-        return Milestone::query()->orderBy('happened_on')->get();
+        return $this->once('milestones', fn (): Collection => Milestone::query()->orderBy('happened_on')->get());
     }
 
     /**
@@ -172,7 +181,7 @@ class HomePage
      */
     public function testimonials(): Collection
     {
-        return Testimonial::query()->ordered()->get();
+        return $this->once('testimonials', fn (): Collection => Testimonial::query()->ordered()->get());
     }
 
     /**
@@ -180,7 +189,29 @@ class HomePage
      */
     public function videos(): Collection
     {
-        return Video::query()->ordered()->get();
+        return $this->once('videos', fn (): Collection => Video::query()->ordered()->get());
+    }
+
+    /**
+     * The video the hero plays: the one marked as featured, else the first.
+     */
+    public function featuredVideo(): ?Video
+    {
+        return $this->videos()->firstWhere('is_featured', true) ?? $this->videos()->first();
+    }
+
+    /**
+     * The latest media reports about the expo, newest first; each links out to its publisher.
+     *
+     * @return Collection<int, NewsArticle>
+     */
+    public function coverage(int $limit = 6): Collection
+    {
+        return $this->once('coverage', fn (): Collection => NewsArticle::query()
+            ->where('type', NewsType::Coverage)
+            ->latest('published_at')
+            ->limit($limit)
+            ->get());
     }
 
     /**
@@ -190,7 +221,7 @@ class HomePage
      */
     public function partnersByRole(): SupportCollection
     {
-        $partners = Partner::query()->ordered()->get();
+        $partners = $this->once('partners', fn (): Collection => Partner::query()->with('edition')->ordered()->get());
 
         return collect(PartnerRole::cases())
             ->mapWithKeys(fn (PartnerRole $role): array => [$role->value => $partners->where('role', $role)->values()])
@@ -249,6 +280,17 @@ class HomePage
         }
 
         return ['@context' => 'https://schema.org', '@graph' => $graph];
+    }
+
+    /**
+     * @template T
+     *
+     * @param  callable(): T  $load
+     * @return T
+     */
+    private function once(string $key, callable $load): mixed
+    {
+        return $this->loaded[$key] ??= $load();
     }
 
     public function formatter(): LocaleFormatter

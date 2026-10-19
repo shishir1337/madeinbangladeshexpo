@@ -2,6 +2,7 @@
     'title',
     'description' => null,
     'image' => null,
+    'imageAlt' => null,
     'type' => 'website',
 ])
 
@@ -24,6 +25,6 @@
 @endforeach
 @if ($image)
     <meta property="og:image" content="{{ $image }}">
-    <meta property="og:image:alt" content="{{ $title }}">
+    <meta property="og:image:alt" content="{{ $imageAlt ?: $title }}">
 @endif
 <meta name="twitter:card" content="summary_large_image">

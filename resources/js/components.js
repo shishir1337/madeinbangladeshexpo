@@ -46,7 +46,28 @@ export function registerComponents(Alpine) {
 
             if (seconds === 0) {
                 this.stop();
+                this.opened();
             }
+        },
+
+        /**
+         * The doors just opened while the page was on screen: reload once so the server shows the live state.
+         * Once per target, so a client clock that runs ahead of the server can never cause a reload loop.
+         */
+        opened() {
+            const key = `mbe.countdown.reloaded.${targetIso}`;
+
+            try {
+                if (window.sessionStorage.getItem(key)) {
+                    return;
+                }
+
+                window.sessionStorage.setItem(key, '1');
+            } catch {
+                return;
+            }
+
+            window.setTimeout(() => window.location.reload(), 1500);
         },
 
         start() {
@@ -186,6 +207,7 @@ export function registerComponents(Alpine) {
 
             this.$refs.player.replaceChildren(iframe);
             this.playing = true;
+            this.$nextTick(() => iframe.focus());
         },
     }));
 

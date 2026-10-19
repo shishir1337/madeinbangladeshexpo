@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             ExhibitorSeeder::class,
             ProgrammeSessionSeeder::class,
             GallerySeeder::class,
+            NewsArticleSeeder::class,
         ]);
     }
 }

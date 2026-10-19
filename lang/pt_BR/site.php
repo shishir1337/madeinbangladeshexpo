@@ -7,6 +7,7 @@ return [
     'demo_ribbon' => 'Site de demonstração',
     'language' => 'Idioma',
     'organised_by' => 'Organizado por :organiser',
+    'photo_credit' => 'Foto: :name',
     'home' => 'Início',
     'breadcrumb' => 'Trilha de navegação',
 

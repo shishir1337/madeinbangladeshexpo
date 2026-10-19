@@ -18,6 +18,7 @@
                 tabindex="0"
                 aria-label="{{ __('home.timeline.title') }}"
                 class="no-scrollbar track-gutter flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 focus-visible:outline-offset-[-3px]"
+                data-lenis-prevent
             >
                 @foreach ($milestones as $milestone)
                     <li class="relative w-[min(82vw,22rem)] shrink-0 snap-start">

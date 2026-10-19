@@ -9,7 +9,7 @@
                 <div class="aspect-[4/3] overflow-hidden rounded-[2rem] shadow-lift">
                     <x-ui.img key="sao-paulo-skyline" :alt="__('home.where.skyline_alt')" sizes="(min-width: 1024px) 50vw, 100vw" class="size-full object-cover" />
                 </div>
-                <p class="mt-3 text-xs text-ink-soft">Photo: Kaique Rocha / Pexels</p>
+                <p class="mt-3 text-xs text-ink-soft">{{ __('site.photo_credit', ['name' => 'Kaique Rocha / Pexels']) }}</p>
                 <div class="absolute -top-5 -right-3 hidden rounded-2xl bg-yellow px-5 py-4 text-navy shadow-lift sm:block lg:-right-6">
                     <p class="text-xs font-semibold tracking-wide uppercase">{{ __('home.hero.facts.dates') }}</p>
                     <p class="mt-1 font-display text-lg leading-tight font-semibold">{{ $page->dateRange() }}</p>

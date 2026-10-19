@@ -13,11 +13,7 @@
     ];
 @endphp
 
-<x-layouts.site :title="$label.' · '.__('site.brand')" :description="$description">
-    @push('head')
-        <meta name="robots" content="noindex, follow">
-    @endpush
-
+<x-layouts.site :title="$label.' · '.__('site.brand')" :description="$description" noindex>
     <x-ui.page-hero variant="dark" :eyebrow="$group['label'] ?? __('site.brand')" :title="$label" :lead="$description" :breadcrumbs="$breadcrumbs">
         <x-slot:actions>
             <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/20">

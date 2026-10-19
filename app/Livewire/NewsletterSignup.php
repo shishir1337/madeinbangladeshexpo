@@ -85,6 +85,7 @@ class NewsletterSignup extends Component
                 'unsubscribed_at' => null,
             ])->save();
 
+            $subscription->recordConsent('signed_up');
             $this->sendConfirmation($subscription);
         }
 

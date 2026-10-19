@@ -5,7 +5,7 @@
 
     $cards = [
         ['key' => 'exhibit', 'icon' => 'store', 'route' => $firstExisting('apply', 'exhibit')],
-        ['key' => 'buyer', 'icon' => 'shopping-bag', 'route' => $firstExisting('visit', 'register')],
+        ['key' => 'buyer', 'icon' => 'shopping-bag', 'route' => $firstExisting('register', 'visit')],
         ['key' => 'delegate', 'icon' => 'plane', 'route' => $firstExisting('register')],
         ['key' => 'sponsor', 'icon' => 'sparkles', 'route' => $firstExisting('sponsorship', 'press')],
     ];

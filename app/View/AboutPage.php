@@ -69,7 +69,7 @@ class AboutPage
         return array_values(array_filter([
             ['icon' => 'award', 'label' => __('pages/about.facts.edition'), 'value' => $this->ordinal($edition)],
             ['icon' => 'calendar', 'label' => __('pages/about.facts.dates'), 'value' => $this->dateRange($edition)],
-            $edition->venue === null ? null : ['icon' => 'map-pin', 'label' => __('pages/about.facts.venue'), 'value' => "{$edition->venue->name}, {$edition->venue->city}"],
+            $edition->venue === null ? null : ['icon' => 'map-pin', 'label' => __('pages/about.facts.venue'), 'value' => "{$edition->venue->name}, {$edition->venue->cityName()}"],
             ['icon' => 'clock', 'label' => __('pages/about.facts.duration'), 'value' => $this->duration($edition)],
         ]));
     }
@@ -88,7 +88,7 @@ class AboutPage
             return [];
         }
 
-        $venue = fn (Edition $edition): string => $edition->venue === null ? '—' : "{$edition->venue->name}, {$edition->venue->city}";
+        $venue = fn (Edition $edition): string => $edition->venue === null ? '—' : "{$edition->venue->name}, {$edition->venue->cityName()}";
 
         return [
             ['label' => __('pages/about.facts.dates'), 'previous' => $this->dateRange($previous), 'current' => $this->dateRange($edition)],

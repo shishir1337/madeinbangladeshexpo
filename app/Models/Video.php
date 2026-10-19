@@ -13,7 +13,7 @@ use Spatie\Translatable\HasTranslations;
 /**
  * A YouTube video, shown behind a click-to-load facade.
  */
-#[Fillable(['edition_id', 'youtube_id', 'title', 'speaker', 'poster', 'sort'])]
+#[Fillable(['edition_id', 'youtube_id', 'title', 'speaker', 'poster', 'is_featured', 'sort'])]
 class Video extends Model
 {
     /** @use HasFactory<VideoFactory> */
@@ -30,5 +30,17 @@ class Video extends Model
     public function edition(): BelongsTo
     {
         return $this->belongsTo(Edition::class);
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_featured' => 'boolean',
+        ];
     }
 }

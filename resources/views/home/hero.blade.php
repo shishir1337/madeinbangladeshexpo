@@ -4,7 +4,7 @@
     $edition = $page->edition();
     $editionLabel = $edition ? (__('home.hero.edition')[$edition->number] ?? __('home.hero.edition.n', ['number' => $page->formatter()->plain($edition->number)])) : null;
     $exhibitRoute = $navigation->has('apply') ? 'apply' : ($navigation->has('exhibit') ? 'exhibit' : null);
-    $buyerRoute = $navigation->has('register') ? 'register' : ($navigation->has('visit') ? 'visit' : null);
+    $buyerRoute = $navigation->has('register') ? 'register' : null;
     $sectorCount = $page->sectors()->count();
 
     $facts = array_values(array_filter([
@@ -23,7 +23,7 @@
     <div class="container-site grid items-center gap-12 pt-10 pb-12 md:pt-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:pt-16 lg:pb-16">
         <div>
             @if ($editionLabel)
-                <p class="eyebrow !text-mint">{{ $editionLabel }} · {{ $page->edition()->venue?->city }}</p>
+                <p class="eyebrow !text-mint">{{ collect([$editionLabel, $page->edition()->venue?->cityName()])->filter()->implode(' · ') }}</p>
             @endif
 
             <h1 class="mt-4 font-display text-display-2xl font-semibold text-balance text-white">{{ $page->title() }}</h1>
@@ -55,7 +55,7 @@
                 <div class="relative col-span-6 row-span-6 overflow-hidden rounded-[2rem] shadow-lift ring-1 ring-white/10 sm:col-span-4">
                     <x-ui.img key="expo25-stand-garments" :alt="__('home.hero.photo_main')" eager sizes="(min-width: 1024px) 32vw, (min-width: 640px) 66vw, 100vw" class="size-full object-cover" />
                     <div class="absolute inset-0 bg-gradient-to-t from-midnight/70 via-transparent to-transparent" aria-hidden="true"></div>
-                    @if ($video = $page->videos()->firstWhere('youtube_id', 'AhCawT3n2Uo') ?? $page->videos()->first())
+                    @if ($video = $page->featuredVideo())
                         <div class="absolute inset-x-4 bottom-4 sm:inset-x-5 sm:bottom-5">
                             <x-ui.video-dialog :youtube-id="$video->youtube_id" :title="$video->title">
                                 {{ __('home.hero.watch') }}

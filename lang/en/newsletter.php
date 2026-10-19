@@ -28,9 +28,22 @@ return [
         'signature' => 'Brazil Bangladesh Chamber of Commerce & Industry (BBCCI)',
     ],
 
+    'confirm' => [
+        'title' => 'Confirm your subscription',
+        'lead' => 'One more step: press the button to start receiving expo dates, deadlines and news in your language.',
+        'button' => 'Yes, subscribe me',
+    ],
+
     'confirmed' => [
         'title' => 'You are subscribed',
         'lead' => 'Thank you. You will receive dates, deadlines and news about the expo in your language, and you can unsubscribe from any of our emails.',
+    ],
+
+    'unsubscribe_invalid' => [
+        'title' => 'This unsubscribe link is not valid',
+        'lead' => 'It may have been copied incompletely. Write to us and we will remove your address straight away.',
+        'write' => 'Ask to be removed',
+        'subject' => 'Please remove me from the expo updates',
     ],
 
     'expired' => [

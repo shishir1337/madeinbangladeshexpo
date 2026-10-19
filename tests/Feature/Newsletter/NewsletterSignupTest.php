@@ -58,7 +58,7 @@ class NewsletterSignupTest extends TestCase
     {
         $subscription = NewsletterSubscription::factory()->create(['locale' => 'pt_BR']);
 
-        $this->get($subscription->confirmationUrl())
+        $this->post($subscription->confirmationUrl())
             ->assertOk()
             ->assertSee('<html lang="pt-BR"', false);
 
@@ -189,8 +189,8 @@ class NewsletterSignupTest extends TestCase
         $classes = explode(' ', $match[1]);
 
         $this->assertContains('h-12', $classes);
-        $this->assertContains('sm:flex-1', $classes);
-        $this->assertNotContains('flex-1', $classes, 'An unprefixed flex-1 collapses the input to its content height in the stacked phone layout.');
+        $this->assertContains('w-full', $classes);
+        $this->assertNotContains('flex-1', $classes, 'An unprefixed flex-1 collapses the input to its content height in a stacked layout.');
     }
 
     public function test_bangla_confirmation_mail_states_the_link_lifetime_in_bangla_digits(): void
@@ -200,6 +200,89 @@ class NewsletterSignupTest extends TestCase
         $mail = (new ConfirmNewsletterSubscription($subscription))->locale('bn');
 
         $mail->assertSeeInHtml('এই লিংকটি ৭ দিন কার্যকর থাকবে।');
+    }
+
+    public function test_confirmation_needs_a_button_press_so_link_scanners_cannot_subscribe_anyone(): void
+    {
+        $subscription = NewsletterSubscription::factory()->create();
+        $link = $subscription->confirmationUrl();
+
+        $this->get($link)
+            ->assertOk()
+            ->assertSee('<form method="POST" action="'.e($link).'"', false)
+            ->assertSee(__('newsletter.confirm.button'))
+            ->assertSee('<meta name="robots" content="noindex', false);
+        $this->assertNull($subscription->fresh()->confirmed_at);
+
+        $this->post($link)->assertOk()->assertSee(__('newsletter.confirmed.title'));
+        $this->assertNotNull($subscription->fresh()->confirmed_at);
+    }
+
+    public function test_an_old_confirmation_link_never_resubscribes_someone_who_left(): void
+    {
+        $subscription = NewsletterSubscription::factory()->confirmed()->create(['consented_at' => now()->subDays(2)]);
+        $link = $subscription->confirmationUrl();
+        $subscription->update(['unsubscribed_at' => now()->subDay()]);
+
+        $this->post($link)->assertForbidden();
+
+        $this->assertNotNull($subscription->fresh()->unsubscribed_at);
+    }
+
+    public function test_a_changed_id_gets_the_same_answer_as_a_bad_signature(): void
+    {
+        $subscription = NewsletterSubscription::factory()->create();
+        $forged = str_replace("/{$subscription->id}/", '/999999/', $subscription->confirmationUrl());
+
+        $this->get($forged)->assertForbidden()->assertSee(__('newsletter.expired.title'));
+    }
+
+    public function test_a_bad_unsubscribe_link_explains_how_to_leave(): void
+    {
+        $subscription = NewsletterSubscription::factory()->confirmed()->create();
+
+        $this->get($subscription->unsubscribeUrl().'x')
+            ->assertForbidden()
+            ->assertSee(__('newsletter.unsubscribe_invalid.title'))
+            ->assertDontSee(__('newsletter.expired.title'));
+    }
+
+    public function test_every_consent_step_is_recorded_with_ip_and_browser(): void
+    {
+        Livewire::test(NewsletterSignup::class)
+            ->set('email', 'proof@example.com')
+            ->set('consent', true)
+            ->call('submit');
+
+        $subscription = NewsletterSubscription::sole();
+        $this->post($subscription->confirmationUrl(), [], ['User-Agent' => 'Mail Client/2.0']);
+        $this->get($subscription->unsubscribeUrl());
+
+        $this->assertSame(['signed_up', 'confirmed', 'unsubscribed'], $subscription->consentEvents()->orderBy('id')->pluck('event')->all());
+        $this->assertSame('Mail Client/2.0', $subscription->consentEvents()->where('event', 'confirmed')->value('user_agent'));
+        $this->assertNotNull($subscription->consentEvents()->where('event', 'signed_up')->value('ip'));
+        $this->assertSame(config('expo.consent.newsletter_version'), $subscription->consentEvents()->where('event', 'signed_up')->value('consent_version'));
+    }
+
+    public function test_confirmation_mail_header_and_footer_are_in_the_subscribers_language(): void
+    {
+        $subscription = NewsletterSubscription::factory()->create(['locale' => 'bn']);
+
+        $mail = (new ConfirmNewsletterSubscription($subscription))->locale('bn');
+
+        $mail->assertSeeInHtml('মেইড ইন বাংলাদেশ এক্সপো');
+        $mail->assertDontSeeInHtml('All rights reserved');
+    }
+
+    public function test_consent_comes_before_the_button_and_the_result_is_announced(): void
+    {
+        $html = Livewire::test(NewsletterSignup::class)->html();
+
+        $this->assertLessThan(strpos($html, 'type="submit"'), strpos($html, 'wire:model="consent"'));
+        $this->assertStringContainsString('aria-live="polite"', $html);
+
+        $success = Livewire::test(NewsletterSignup::class)->set('email', 'a@example.com')->set('consent', true)->call('submit')->html();
+        $this->assertMatchesRegularExpression('/aria-live="polite".*tabindex="-1"[^>]*x-init="\$el\.focus\(\)"/s', $success);
     }
 
     public function test_unsubscribe_link_unsubscribes(): void

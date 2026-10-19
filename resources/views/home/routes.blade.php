@@ -46,8 +46,8 @@
             </div>
         </div>
 
-        <figure class="relative mt-12 md:mt-16" role="img" aria-label="{{ __('home.routes.map_label') }}">
-            <div class="relative aspect-[1000/380] w-full">
+        <figure class="relative mt-12 md:mt-16">
+            <div class="relative aspect-[1000/380] w-full" role="img" aria-label="{{ __('home.routes.map_label') }}">
                 <img src="{{ asset('img/world-dots.svg') }}" alt="" width="1000" height="380" loading="lazy" decoding="async" class="absolute inset-0 size-full select-none">
 
                 <svg viewBox="0 0 1000 380" class="absolute inset-0 size-full overflow-visible" aria-hidden="true" focusable="false">
@@ -86,15 +86,15 @@
             </div>
 
             <figcaption class="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/80">
-                <span class="inline-flex items-center gap-3">
-                    <span class="h-0.5 w-8 rounded bg-yellow" aria-hidden="true"></span>
-                    <x-ui.icon name="ship" class="size-4 text-yellow" />
-                    <strong class="font-semibold text-white">{{ __('home.routes.sea') }}</strong> {{ __('home.routes.sea_detail') }}
+                <span class="flex items-start gap-3">
+                    <span class="mt-2 h-0.5 w-8 shrink-0 rounded bg-yellow" aria-hidden="true"></span>
+                    <x-ui.icon name="ship" class="mt-0.5 size-4 shrink-0 text-yellow" />
+                    <span><strong class="font-semibold text-white">{{ __('home.routes.sea') }}</strong> {{ __('home.routes.sea_detail') }}</span>
                 </span>
-                <span class="inline-flex items-center gap-3">
-                    <span class="h-0.5 w-8 border-t-2 border-dotted border-mint" aria-hidden="true"></span>
-                    <x-ui.icon name="plane" class="size-4 text-mint" />
-                    <strong class="font-semibold text-white">{{ __('home.routes.air') }}</strong> {{ __('home.routes.air_detail') }}
+                <span class="flex items-start gap-3">
+                    <span class="mt-2 h-0.5 w-8 shrink-0 border-t-2 border-dotted border-mint" aria-hidden="true"></span>
+                    <x-ui.icon name="plane" class="mt-0.5 size-4 shrink-0 text-mint" />
+                    <span><strong class="font-semibold text-white">{{ __('home.routes.air') }}</strong> {{ __('home.routes.air_detail') }}</span>
                 </span>
             </figcaption>
         </figure>

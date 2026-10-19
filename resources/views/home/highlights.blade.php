@@ -1,9 +1,11 @@
 @inject('navigation', 'App\Support\Navigation\SiteNavigation')
+@inject('images', 'App\Support\Images\ImageManifest')
 
 @php
     $photos = ['expo25-welcome', 'expo25-stand-accessories', 'expo25-speaker-shahriar-ahmed', 'expo25-stand-sts', 'expo25-guests', 'expo25-speaker-saiful-alam'];
     $videos = $page->videos();
     $testimonials = $page->testimonials();
+    $lightboxPhotos = array_map(fn (string $photo): array => $images->lightboxPhoto($photo, __('home.highlights.photos.'.$photo)), $photos);
 @endphp
 
 <x-ui.section tone="white" data-section="highlights" id="highlights">
@@ -14,22 +16,30 @@
         @endif
     </div>
 
-    <div class="mt-12 grid auto-rows-[9rem] grid-cols-2 gap-3 sm:auto-rows-[11rem] md:grid-cols-4 md:gap-4 lg:auto-rows-[13rem]">
-        @foreach ($photos as $photo)
-            <figure @class([
-                'relative overflow-hidden rounded-[1.25rem] bg-cream-2',
-                'col-span-2 row-span-2' => $loop->index === 0,
-                'row-span-2' => in_array($loop->index, [3, 4], true),
-                'col-span-2' => $loop->index === 5,
-            ]) data-reveal="scale" data-reveal-delay="{{ $loop->index * 0.05 }}">
-                <x-ui.img :key="$photo" :alt="__('home.highlights.photos.'.$photo)" :sizes="$loop->index === 0 ? '(min-width: 768px) 50vw, 100vw' : '(min-width: 768px) 25vw, 50vw'" class="size-full object-cover transition duration-700 hover:scale-[1.04]" />
-            </figure>
-        @endforeach
+    <div x-data="lightbox(@js($lightboxPhotos), @js(__('pages/gallery.lightbox.counter')))" class="mt-12">
+        <div class="grid auto-rows-[9rem] grid-cols-2 gap-3 sm:auto-rows-[11rem] md:grid-cols-4 md:gap-4 lg:auto-rows-[13rem]">
+            @foreach ($photos as $photo)
+                <button type="button" data-lightbox-item="{{ $loop->index }}" x-on:click="open({{ $loop->index }}, $event)" aria-label="{{ __('pages/gallery.open', ['number' => $page->formatter()->plain($loop->iteration), 'total' => $page->formatter()->plain(count($photos)), 'caption' => __('home.highlights.photos.'.$photo)]) }}" @class([
+                    'group relative overflow-hidden rounded-[1.25rem] bg-cream-2 focus-visible:outline-offset-4',
+                    'col-span-2 row-span-2' => $loop->index === 0,
+                    'row-span-2' => in_array($loop->index, [3, 4], true),
+                    'col-span-2' => $loop->index === 5,
+                ]) data-reveal="scale" data-reveal-delay="{{ $loop->index * 0.05 }}">
+                    <x-ui.img :key="$photo" :alt="__('home.highlights.photos.'.$photo)" :sizes="$loop->index === 0 ? '(min-width: 768px) 50vw, 100vw' : '(min-width: 768px) 25vw, 50vw'" class="size-full object-cover transition duration-700 group-hover:scale-[1.04]" />
+                    <span class="absolute right-3 bottom-3 grid size-9 place-items-center rounded-full bg-midnight/70 text-white opacity-0 backdrop-blur transition group-hover:opacity-100 group-focus-visible:opacity-100" aria-hidden="true"><x-ui.icon name="plus" class="size-4" /></span>
+                </button>
+            @endforeach
+        </div>
+        <x-ui.lightbox-dialog />
     </div>
+
+    @if ($navigation->has('gallery'))
+        <p class="mt-6"><x-ui.link :href="localized_route('gallery')">{{ __('home.highlights.gallery') }}</x-ui.link></p>
+    @endif
 
     @if ($videos->isNotEmpty())
         <h3 class="mt-16 font-display text-display-sm font-semibold text-navy">{{ __('home.highlights.videos') }}</h3>
-        <div class="swipe-row mt-6 gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-3">
+        <div class="swipe-row mt-6 gap-5 sm:grid sm:grid-cols-2 lg:grid-cols-3" tabindex="0" role="region" aria-label="{{ __('home.highlights.videos') }}" data-lenis-prevent>
             @foreach ($videos->take(3) as $video)
                 <x-ui.youtube :id="$video->youtube_id" :title="$video->title" :poster="$video->poster" :caption="$video->speaker" />
             @endforeach
@@ -38,7 +48,7 @@
 
     @if ($testimonials->isNotEmpty())
         <h3 class="mt-16 font-display text-display-sm font-semibold text-navy">{{ __('home.highlights.quotes') }}</h3>
-        <div class="swipe-row mt-6 gap-5 sm:grid md:grid-cols-2 xl:grid-cols-3">
+        <div class="swipe-row mt-6 gap-5 sm:grid md:grid-cols-2 xl:grid-cols-3" tabindex="0" role="region" aria-label="{{ __('home.highlights.quotes') }}" data-lenis-prevent>
             @foreach ($testimonials as $testimonial)
                 <figure @class([
                     'flex flex-col rounded-[1.75rem] p-7',

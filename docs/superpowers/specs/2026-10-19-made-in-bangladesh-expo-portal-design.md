@@ -84,7 +84,7 @@ Our design therefore has three layers:
 
 ## 3. Constraints
 
-- **Stack already in place:** Laravel 13.37 on PHP 8.4. PHP 8.4 is installed side-by-side via winget. XAMPP's PHP 8.2 must not be used for this project; see the memory note on the PHP path. PostgreSQL 17 and Docker are installed locally.
+- **Stack already in place:** Laravel 13.37 on PHP 8.4. PHP 8.4 is installed side-by-side via winget. XAMPP's PHP 8.2 must not be used for this project; see the memory note on the PHP path. MySQL (XAMPP's MariaDB 10.4, port 3366) and Docker are installed locally.
 - **Three languages** everywhere a participant sees text, including URLs (localised slugs), emails, PDFs, badges, validation messages and the PWA. The console is English-first (Bangla optional later).
 - **Payments:**
   - SSLCommerz caps a single transaction at about BDT 500,000 (≈ one USD 4,000 stall), so **bank transfer with slip upload is a first-class path**.
@@ -400,7 +400,7 @@ Must-match pages and components (`02` §2 lists all 54):
 | Layer | Choice |
 |---|---|
 | Framework | Laravel 13.37, PHP 8.4 |
-| Database | **PostgreSQL 17** (dev and prod; JSONB for translations, pgvector available for later semantic matching). Tests may use a separate PostgreSQL database. |
+| Database | **MySQL** (user's choice, 2026-10-19): MySQL 8 in prod, XAMPP's MariaDB 10.4 in dev; JSON columns for translations; SQL must run on both, so no partial indexes. Tests use a separate MySQL database. |
 | Public site and participant portal | Blade + **Livewire 4** + Alpine + **Tailwind CSS 4** (custom design system, not a UI kit look) |
 | BBCCI console | **Filament 5** panel, themed to the brand |
 | i18n | mcamara/laravel-localization (EN at root, `/pt/…`, `/bn/…`, localised slugs) · spatie/laravel-translatable (+ lara-zeus/spatie-translatable for Filament) · laravel-lang · spatie/laravel-translation-loader (DB-editable strings) |
@@ -423,7 +423,7 @@ Must-match pages and components (`02` §2 lists all 54):
 
 ### Hosting (working value, my call; questionnaire 15.2 may change it)
 
-- **Production:** managed VPS (or containers) in a **São Paulo region**, behind Cloudflare (CDN, WAF, Turnstile, edge cache for public HTML). Running: PostgreSQL 17, Redis, Horizon workers, Reverb, a Gotenberg container, and S3-compatible encrypted object storage.
+- **Production:** managed VPS (or containers) in a **São Paulo region**, behind Cloudflare (CDN, WAF, Turnstile, edge cache for public HTML). Running: MySQL 8, Redis, Horizon workers, Reverb, a Gotenberg container, and S3-compatible encrypted object storage.
 - **Why São Paulo:** it keeps buyer data in Brazil under LGPD and gives fast first loads for Brazilians. Cloudflare's edge serves Dhaka.
 - **Shared/cPanel hosting cannot run this design.** If BBCCI insists on it, that is a re-plan, not a tweak.
 - **Staging** for the pitch has the same shape at a smaller size.
@@ -519,7 +519,7 @@ Phase 13 (pitch packaging) always happens, whatever was cut before it.
 
 | # | Phase | Delivers | Gate |
 |---|---|---|---|
-| 0 | Foundation | PostgreSQL, PHP 8.4 toolchain, packages, Edition + settings, 3-locale routing with localised slugs, auth skeleton, roles, CI test setup, demo-mode flag | Tests green; `/`, `/pt`, `/bn` resolve |
+| 0 | Foundation | MySQL, PHP 8.4 toolchain, packages, Edition + settings, 3-locale routing with localised slugs, auth skeleton, roles, CI test setup, demo-mode flag | Tests green; `/`, `/pt`, `/bn` resolve |
 | 1 | Design system and style tiles | Tokens, fonts, motif, components (nav, mega-menu, footer, buttons, cards, forms, stepper, tables, badges, modals, toasts), motion primitives, living style-guide page | **You review 2–3 style tiles in the browser and pick one** |
 | 2 | Home page ★ | The full home page (§5A) at production polish, in 3 languages, with real photos, video, globe and countdown | Lighthouse and responsiveness matrix pass |
 | 3 | Core public pages ★ | About, Organiser, Committee, Sectors (index + 9), 2025 archive and galleries, News, Contact, FAQ, Legal, 404/500, search | Content review |

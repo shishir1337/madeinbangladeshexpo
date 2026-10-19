@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** a Laravel 13 app on PostgreSQL that serves English at `/`, Portuguese at `/pt` and Bangla at `/bn` from one route definition. The current edition's name, dates and venue are read from the database and rendered correctly in each language.
+**Goal:** a Laravel 13 app on MySQL that serves English at `/`, Portuguese at `/pt` and Bangla at `/bn` from one route definition. The current edition's name, dates and venue are read from the database and rendered correctly in each language.
 
 **Architecture:** a small custom localization layer:
 
@@ -13,7 +13,7 @@
 
 Event facts live in `Edition`/`Venue` models (translatable name) and in spatie settings, and are formatted per locale (Bangla numerals included) by one formatter service.
 
-**Tech stack:** Laravel 13.37, PHP 8.4, PostgreSQL 17, PHPUnit 12, spatie/laravel-translatable ^6.15, spatie/laravel-settings ^3.9, spatie/laravel-permission ^8.3.
+**Tech stack:** Laravel 13.37, PHP 8.4, MySQL (locally XAMPP's MariaDB 10.4; MySQL 8 in production), PHPUnit 12, spatie/laravel-translatable ^6.15, spatie/laravel-settings ^3.9, spatie/laravel-permission ^8.3.
 
 **Spec:** `docs/superpowers/specs/2026-10-19-made-in-bangladesh-expo-portal-design.md` (§3 constraints, §4 working values, §5J roles, §5Q demo mode, §7 stack). Master plan: `docs/superpowers/plans/2026-10-19-master-plan.md`.
 
@@ -42,9 +42,10 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
   & $php84 C:\ProgramData\ComposerSetup\bin\composer.phar <args> --no-interaction
   ```
 
-- **Database:** PostgreSQL 17 on `127.0.0.1:5432`.
-  - App database `bbcci_expo`, test database `bbcci_expo_test`, role `bbcci` (local dev password `bbcci_local`).
-  - PostgreSQL-specific SQL is allowed.
+- **Database:** MySQL, the user's choice (2026-10-19). Locally this is XAMPP's MariaDB 10.4 on `127.0.0.1:3366`, user `root` with no password; production is MySQL 8.
+  - App database `bbcci_expo`, test database `bbcci_expo_test` (both `utf8mb4_unicode_ci`).
+  - Use the `mysql` driver. Write only SQL that runs on both MariaDB 10.4 and MySQL 8: no partial indexes, no `jsonb`, no `ILIKE`.
+  - XAMPP's MySQL must be running. Start it from the XAMPP Control Panel, or with `C:\xampp\mysql\bin\mysqld.exe --defaults-file=C:\xampp\mysql\bin\my.ini --standalone`.
 
 **Laravel Boost conventions** (`CLAUDE.md`)
 
@@ -87,20 +88,20 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
 
 ---
 
-### Task 1: Repository, toolchain and PostgreSQL test database
+### Task 1: Repository, toolchain and MySQL test database
 
 **Files:**
-- Modify: `.gitignore`, `.env`, `.env.example`, `phpunit.xml`, `tests/TestCase.php`, PHP 8.4's `php.ini` (outside the repo)
+- Modify: `.gitignore`, `.env`, `.env.example`, `phpunit.xml`, `tests/TestCase.php`
 - Delete: `tests/Feature/ExampleTest.php`, `tests/Unit/ExampleTest.php`
 - Test: `tests/Feature/DatabaseConnectionTest.php`
 
 **Interfaces:**
-- Produces: a git repository with a baseline commit, a working `pgsql` connection for app and tests, and `TestCase` calling `$this->withoutVite()` in `setUp()`.
+- Produces: a git repository with a baseline commit, a working `mysql` connection for app and tests, and `TestCase` calling `$this->withoutVite()` in `setUp()`.
 
-- [ ] **Step 1: Enable the PostgreSQL PHP extensions.** In `C:\Users\amaiz\AppData\Local\Microsoft\WinGet\Packages\PHP.PHP.8.4_Microsoft.Winget.Source_8wekyb3d8bbwe\php.ini`, uncomment `extension=pdo_pgsql` and `extension=pgsql`.
+- [ ] **Step 1: Check the MySQL PHP extension.** PHP 8.4's `php.ini` already enables `pdo_mysql`.
 
-  Run: `"$PHP84" -m | grep -i pgsql`
-  Expected: `pdo_pgsql` and `pgsql` listed.
+  Run: `"$PHP84" -m | grep -i pdo_mysql`
+  Expected: `pdo_mysql` listed.
 
 - [ ] **Step 2: Initialise git and make the baseline commit.**
   - Run `git init`.
@@ -109,21 +110,22 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
 
   Expected: `git log --oneline` shows 1 commit, and `git status` is clean.
 
-- [ ] **Step 3: Ask the user to create the database role and databases.** This needs the `postgres` superuser password, which we don't have. Ask them to run this **in their own terminal** (it prompts for the password):
+- [ ] **Step 3: Create the databases.**
 
   ```powershell
-  & "C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres -h 127.0.0.1 -c "CREATE ROLE bbcci LOGIN PASSWORD 'bbcci_local' CREATEDB;" -c "CREATE DATABASE bbcci_expo OWNER bbcci;" -c "CREATE DATABASE bbcci_expo_test OWNER bbcci;"
+  & C:\xampp\mysql\bin\mysql.exe -u root -h 127.0.0.1 -P 3366 -e "CREATE DATABASE IF NOT EXISTS bbcci_expo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE DATABASE IF NOT EXISTS bbcci_expo_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
   ```
 
-  Expected: `CREATE ROLE`, `CREATE DATABASE`, `CREATE DATABASE`.
+  Expected: `SHOW DATABASES LIKE 'bbcci%'` lists both.
 
-- [ ] **Step 4: Point the app and tests at PostgreSQL.**
-  - In `.env` and `.env.example`, set:
-    - `DB_CONNECTION=pgsql`, `DB_HOST=127.0.0.1`, `DB_PORT=5432`
-    - `DB_DATABASE=bbcci_expo`, `DB_USERNAME=bbcci`, `DB_PASSWORD=bbcci_local`
+- [ ] **Step 4: Point the app and tests at MySQL.**
+  - In `.env`, set:
+    - `DB_CONNECTION=mysql`, `DB_HOST=127.0.0.1`, `DB_PORT=3366`
+    - `DB_DATABASE=bbcci_expo`, `DB_USERNAME=root`, `DB_PASSWORD=` (empty)
     - `APP_NAME="Made in Bangladesh Expo"`
-    - `DEMO_MODE=false` (`.env.example` gets `DEMO_MODE=false` too)
-  - In `phpunit.xml`, replace the sqlite lines with `<env name="DB_CONNECTION" value="pgsql"/>` and `<env name="DB_DATABASE" value="bbcci_expo_test"/>`.
+    - `DEMO_MODE=false`
+  - `.env.example` gets the same values, except the standard `DB_PORT=3306`.
+  - In `phpunit.xml`, replace the sqlite lines with `<env name="DB_CONNECTION" value="mysql"/>` and `<env name="DB_DATABASE" value="bbcci_expo_test"/>`.
   - In `tests/TestCase.php`, add `setUp()` calling `parent::setUp()` and then `$this->withoutVite()`.
   - Delete both `ExampleTest.php` files and `database/database.sqlite`.
 
@@ -132,9 +134,9 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
   ```php
   use RefreshDatabase;
 
-  public function test_tests_run_against_the_postgresql_test_database(): void
+  public function test_tests_run_against_the_mysql_test_database(): void
   {
-      $this->assertSame('pgsql', DB::connection()->getDriverName());
+      $this->assertSame('mysql', DB::connection()->getDriverName());
       $this->assertSame('bbcci_expo_test', DB::connection()->getDatabaseName());
   }
   ```
@@ -150,7 +152,7 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
 
   Expected: migrations ran on `bbcci_expo`; 1 test passes. If it fails, check Step 4's `phpunit.xml` lines first.
 
-- [ ] **Step 7: Commit.** `chore: run app and tests on PostgreSQL 17`
+- [ ] **Step 7: Commit.** `chore: run app and tests on MySQL`
 
 ---
 
@@ -447,7 +449,7 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
 | `venue_id` | nullable FK → venues, null on delete |
 | `slug` | string, unique |
 | `number` | unsignedSmallInteger |
-| `name` | jsonb |
+| `name` | json |
 | `starts_on` | date |
 | `ends_on` | date |
 | `opening_at` | nullable timestampTz |
@@ -456,11 +458,9 @@ Event facts live in `Edition`/`Venue` models (translatable name) and in spatie s
 | `is_current` | boolean, default false |
 | timestamps | |
 
-After creating the table, add:
+| `current_marker` | nullable unsignedTinyInteger, `storedAs('if(is_current, 1, null)')`, unique index named `editions_single_current` |
 
-```sql
-CREATE UNIQUE INDEX editions_single_current ON editions (is_current) WHERE is_current
-```
+MySQL has no partial indexes. `current_marker` is 1 for the current edition and NULL for every other one. A unique index allows any number of NULLs, so it permits at most one current edition. The column is generated: add it to the model's `$guarded` and `$hidden`, and never write it.
 
 **Interfaces:**
 - Produces:

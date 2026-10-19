@@ -53,9 +53,9 @@ Phase 13 (pitch packaging) always happens.
 
 ## Phase 0: Foundation
 
-- **Goal:** a correctly configured Laravel 13 app on PostgreSQL that serves three locales from one set of routes and reads event facts from data, not code.
+- **Goal:** a correctly configured Laravel 13 app on MySQL that serves three locales from one set of routes and reads event facts from data, not code.
 - **Scope:**
-  - PostgreSQL dev and test databases
+  - MySQL dev and test databases
   - custom localization layer: EN at `/`, PT-BR at `/pt`, BN at `/bn`, translated slugs, hreflang alternates, language switcher data, legacy-prefix redirects
   - locale-aware number and date formatting, including Bangla numerals and date ranges
   - `Edition` and `Venue` models with the working values from spec §4

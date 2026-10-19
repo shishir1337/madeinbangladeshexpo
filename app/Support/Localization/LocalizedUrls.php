@@ -52,7 +52,8 @@ class LocalizedUrls
     }
 
     /**
-     * The current page's URL in each locale it is registered for, or none when it is not localized.
+     * The current page's URL in each locale it is registered for, or none when it is not localized. Records
+     * with translated slugs (HasLocalizedSlug) get each locale's own slug.
      *
      * @return array<string, string>
      */
@@ -69,7 +70,12 @@ class LocalizedUrls
 
         foreach ($this->locales->all() as $locale) {
             if (Route::has("{$locale->key}.{$baseName}")) {
-                $urls[$locale->key] = localized_route($baseName, $route->parameters(), $locale->key);
+                $parameters = array_map(
+                    fn (mixed $parameter): mixed => $parameter instanceof HasLocalizedSlug ? $parameter->localizedSlug($locale->key) : $parameter,
+                    $route->parameters(),
+                );
+
+                $urls[$locale->key] = localized_route($baseName, $parameters, $locale->key);
             }
         }
 

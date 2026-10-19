@@ -3,32 +3,36 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSortOrder;
+use App\Models\Concerns\ResolvesByLocalizedSlug;
+use App\Support\Localization\HasLocalizedSlug;
 use Database\Factories\SectorFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
 /**
- * One of the expo's product sectors, with a sourced headline figure.
+ * One of the expo's product sectors, with a sourced headline figure, the HS chapters it covers, a Markdown
+ * deep-dive and the import rules to know.
  */
-#[Fillable(['slug', 'name', 'summary', 'icon', 'image', 'figure_value', 'figure_decimals', 'figure_prefix', 'figure_suffix', 'figure_label', 'figure_source', 'sort'])]
-class Sector extends Model
+#[Fillable(['slug', 'name', 'summary', 'icon', 'image', 'figure_value', 'figure_decimals', 'figure_prefix', 'figure_suffix', 'figure_label', 'figure_source', 'hs_chapters', 'body', 'rules', 'sort'])]
+class Sector extends Model implements HasLocalizedSlug
 {
     /** @use HasFactory<SectorFactory> */
-    use HasFactory, HasSortOrder, HasTranslations;
+    use HasFactory, HasSortOrder, HasTranslations, ResolvesByLocalizedSlug;
 
     /**
      * @var list<string>
      */
-    public array $translatable = ['slug', 'name', 'summary', 'figure_suffix', 'figure_label'];
+    public array $translatable = ['slug', 'name', 'summary', 'figure_suffix', 'figure_label', 'body', 'rules'];
 
     /**
-     * The URL slug in a locale: translated for Portuguese, English for English and Bangla.
+     * @return HasMany<Exhibitor, $this>
      */
-    public function localizedSlug(string $locale): string
+    public function exhibitors(): HasMany
     {
-        return $this->getTranslation('slug', $locale);
+        return $this->hasMany(Exhibitor::class);
     }
 
     /**
@@ -41,6 +45,7 @@ class Sector extends Model
         return [
             'figure_value' => 'float',
             'figure_decimals' => 'integer',
+            'hs_chapters' => 'array',
         ];
     }
 }

@@ -1,0 +1,91 @@
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        scroll-padding-top: 6.5rem;
+        background-color: var(--color-midnight);
+    }
+
+    body {
+        background-color: var(--color-cream);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+        font-optical-sizing: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        text-wrap: balance;
+        color: var(--color-navy);
+    }
+
+    p,
+    li,
+    dd {
+        text-wrap: pretty;
+    }
+
+    /* Bangla: larger, airier body copy; conjuncts need taller lines; never letter-spaced. */
+    :lang(bn) {
+        letter-spacing: 0 !important;
+    }
+
+    html:lang(bn) body {
+        font-size: 1.0625rem;
+        line-height: 1.75;
+    }
+
+    :lang(bn) :is(h1, h2, h3, h4) {
+        line-height: 1.22;
+        font-weight: 600;
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--color-navy);
+        outline-offset: 3px;
+        border-radius: 6px;
+    }
+
+    .on-dark :focus-visible,
+    [data-tone='midnight'] :focus-visible,
+    [data-tone='green'] :focus-visible {
+        outline-color: var(--color-yellow);
+    }
+
+    ::selection {
+        background-color: var(--color-yellow);
+        color: var(--color-navy);
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    img,
+    video,
+    svg {
+        max-width: 100%;
+    }
+
+    img {
+        height: auto;
+    }
+
+    :where(a) {
+        color: inherit;
+    }
+
+    :where(button, [role='button'], summary) {
+        cursor: pointer;
+    }
+
+    hr {
+        border-color: var(--color-sand);
+    }
+}

@@ -1,0 +1,76 @@
+/*
+ * Design tokens (spec §6). Yellow is a fill colour only, always with navy text.
+ * Raw flag colours are never used as text on white.
+ */
+@theme {
+    --color-cream: #fbf7ee;
+    --color-cream-2: #f4eddd;
+    --color-sand: #e6dcc6;
+    --color-sand-2: #d6c9ab;
+    --color-ink: #1f2a44;
+    --color-ink-soft: #4a5468;
+    --color-navy: #002776;
+    --color-navy-700: #0b3a8c;
+    --color-navy-50: #e8edf7;
+    --color-green: #004f3a;
+    --color-green-700: #0a6b4f;
+    --color-green-50: #e6f2ec;
+    --color-yellow: #ffdf00;
+    --color-yellow-soft: #fff4b0;
+    --color-crimson: #b3122a;
+    --color-crimson-50: #fbe9ec;
+    --color-midnight: #071a33;
+    --color-midnight-2: #0e2a4f;
+    --color-midnight-3: #17375f;
+    --color-mint: #3ddc97;
+
+    --font-sans: 'Inter Variable', 'Noto Sans Bengali Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Anek Bangla Variable', 'Inter Variable', 'Noto Sans Bengali Variable', ui-sans-serif, system-ui, sans-serif;
+
+    --text-display-2xl: clamp(2.75rem, 1.35rem + 6vw, 7rem);
+    --text-display-2xl--line-height: 0.92;
+    --text-display-xl: clamp(2.4rem, 1.4rem + 4.2vw, 5.25rem);
+    --text-display-xl--line-height: 0.96;
+    --text-display-lg: clamp(2rem, 1.35rem + 2.8vw, 3.75rem);
+    --text-display-lg--line-height: 1;
+    --text-display-md: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem);
+    --text-display-md--line-height: 1.08;
+    --text-display-sm: clamp(1.3rem, 1.1rem + 0.8vw, 1.75rem);
+    --text-display-sm--line-height: 1.15;
+    --text-lead: clamp(1.075rem, 1rem + 0.35vw, 1.3rem);
+    --text-lead--line-height: 1.55;
+
+    --radius-card: 1.25rem;
+    --radius-pill: 999px;
+
+    --shadow-soft: 0 1px 2px rgb(31 42 68 / 0.05), 0 10px 30px -12px rgb(31 42 68 / 0.18);
+    --shadow-lift: 0 2px 4px rgb(31 42 68 / 0.06), 0 22px 48px -18px rgb(31 42 68 / 0.28);
+    --shadow-ring: 0 0 0 1px rgb(31 42 68 / 0.08);
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+    --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+    --animate-pulse-dot: pulse-dot 2s var(--ease-out-expo) infinite;
+
+    @keyframes marquee {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes pulse-dot {
+        0% {
+            box-shadow: 0 0 0 0 rgb(61 220 151 / 0.55);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgb(61 220 151 / 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgb(61 220 151 / 0);
+        }
+    }
+}

@@ -1,0 +1,38 @@
+/*
+ * Motion. [data-reveal] elements are hidden by JS only when they start below the fold and motion is
+ * allowed, so content is always visible without JS, with reduced motion, and on first paint.
+ */
+@layer base {
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    html[data-motion='reduced'] *,
+    html[data-motion='reduced'] *::before,
+    html[data-motion='reduced'] *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    html.lenis,
+    html.lenis body {
+        height: auto;
+    }
+
+    .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+    }
+
+    .lenis.lenis-stopped {
+        overflow: clip;
+    }
+}

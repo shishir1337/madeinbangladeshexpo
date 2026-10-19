@@ -12,7 +12,7 @@ return [
         'meta_description' => ':sector na Made in Bangladesh Expo: o que o Brasil compra, as regras de importação e as empresas que expuseram.',
         'hs_chapters' => 'Capítulos SH',
         'contents' => 'Nesta página',
-        'rules_title' => 'Regras importantes',
+        'rules_title' => 'Regras em resumo',
         'rules_note' => 'Um resumo para planejamento, não um parecer jurídico. Confirme as regras vigentes com o seu importador ou despachante aduaneiro.',
         'exhibitors_title' => 'Quem expôs',
         'exhibitors_lead' => 'Empresas deste setor na :edition.',

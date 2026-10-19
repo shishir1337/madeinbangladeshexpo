@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             EditionSeeder::class,
             HomeContentSeeder::class,
             PersonSeeder::class,
+            SectorContentSeeder::class,
+            ExhibitorSeeder::class,
         ]);
     }
 }

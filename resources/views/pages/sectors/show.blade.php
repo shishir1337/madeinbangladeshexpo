@@ -61,9 +61,6 @@
                         @foreach ($sections as $section)
                             <li><a href="#{{ $section['id'] }}" class="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-[0.95rem] text-ink-soft transition-colors hover:border-green hover:text-navy">{{ $section['title'] }}</a></li>
                         @endforeach
-                        @if ($rules !== [])
-                            <li><a href="#rules" class="-ml-px block border-l-2 border-transparent py-1.5 pl-4 text-[0.95rem] text-ink-soft transition-colors hover:border-green hover:text-navy">{{ __('pages/sectors.show.rules_title') }}</a></li>
-                        @endif
                     </ol>
                 </nav>
             @endif

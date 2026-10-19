@@ -3,6 +3,8 @@
 namespace Tests\Feature\Seeders;
 
 use App\Models\Edition;
+use App\Models\Exhibitor;
+use App\Models\Sector;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\EditionSeeder;
@@ -21,6 +23,30 @@ class DatabaseSeederTest extends TestCase
 
         $this->assertSame(2, Edition::count());
         $this->assertSame(8, Role::count());
+    }
+
+    public function test_every_sector_gets_its_guide_and_the_2025_exhibitors_are_listed(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $sectors = Sector::query()->ordered()->get();
+        $this->assertCount(9, $sectors);
+
+        foreach ($sectors as $sector) {
+            foreach (['en', 'pt_BR', 'bn'] as $locale) {
+                $body = $sector->getTranslation('body', $locale, false);
+                $this->assertSame(3, substr_count($body, "\n## ") + (str_starts_with($body, '## ') ? 1 : 0), "[{$locale}] {$sector->getTranslation('slug', 'en')} needs three sections.");
+                $this->assertNotEmpty($sector->getTranslation('rules', $locale, false));
+            }
+        }
+
+        $this->assertSame(15, Exhibitor::count());
+        $this->assertSame(9, Exhibitor::query()->whereBelongsTo($sectors->first())->count());
+
+        $sectors->first()->update(['body' => ['en' => '## Edited by staff']]);
+        $this->seed(DatabaseSeeder::class);
+        $this->assertSame('## Edited by staff', $sectors->first()->fresh()->getTranslation('body', 'en'));
+        $this->assertSame(15, Exhibitor::count());
     }
 
     public function test_the_test_user_is_only_created_on_a_local_machine(): void

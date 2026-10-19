@@ -12,7 +12,7 @@ return [
         'meta_description' => ':sector at the Made in Bangladesh Expo: what Brazil buys, the import rules to know and the companies that exhibited.',
         'hs_chapters' => 'HS chapters',
         'contents' => 'On this page',
-        'rules_title' => 'Rules to know',
+        'rules_title' => 'Key rules at a glance',
         'rules_note' => 'A summary for planning, not legal advice. Check the current rules with your importer or customs broker.',
         'exhibitors_title' => 'Who exhibited',
         'exhibitors_lead' => 'Companies from this sector at :edition.',

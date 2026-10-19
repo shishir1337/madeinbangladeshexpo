@@ -8,7 +8,7 @@
         data-tone="midnight"
         role="region"
         aria-label="{{ __('site.announcement.label') }}"
-        class="relative z-50 bg-midnight text-white"
+        class="relative z-30 bg-midnight text-white"
     >
         <div class="container-site flex min-h-11 items-center gap-3 py-2 text-[0.8125rem] sm:text-sm">
             <span class="size-2 shrink-0 rounded-full bg-mint animate-pulse-dot" aria-hidden="true"></span>

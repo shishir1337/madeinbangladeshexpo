@@ -87,6 +87,19 @@ class SiteShellTest extends TestCase
             ->assertSee('href="tel:+8801553676767"', false);
     }
 
+    public function test_the_announcement_bar_stays_below_the_header_so_the_phone_menu_covers_it(): void
+    {
+        Edition::factory()->current()->create();
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        preg_match('/data-announcement[^>]*class="[^"]*\bz-(\d+)/', $html, $announcement);
+        preg_match('/<header[^>]*class="[^"]*\bz-(\d+)/s', $html, $header);
+
+        $this->assertNotEmpty($announcement, 'Announcement z-index not found.');
+        $this->assertLessThan((int) $header[1], (int) $announcement[1]);
+    }
+
     public function test_header_ctas_link_to_apply_and_register(): void
     {
         $this->get('/')

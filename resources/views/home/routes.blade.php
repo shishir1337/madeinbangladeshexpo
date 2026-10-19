@@ -38,7 +38,7 @@
                             <p class="mt-3 font-display text-display-sm leading-none font-semibold tabular">
                                 {{ $side['stat']->prefix }}{{ $formatter->number($side['stat']->value, decimals: $side['stat']->decimals) }}{{ $side['stat']->suffix }}
                             </p>
-                            <p class="mt-1 text-xs text-white/50">{{ $side['stat']->source }}, {{ $side['stat']->as_of }}</p>
+                            <p class="mt-1 text-xs text-white/50">{{ $formatter->digits($side['stat']->source.', '.$side['stat']->as_of) }}</p>
                         @endif
                         <p class="mt-3 text-sm leading-relaxed text-white/80">{{ $side['items'] }}</p>
                     </div>

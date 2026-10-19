@@ -131,6 +131,77 @@ class NewsletterSignupTest extends TestCase
         $this->assertDatabaseCount('newsletter_subscriptions', 5);
     }
 
+    public function test_repeat_signups_for_one_address_send_one_confirmation_per_cooldown(): void
+    {
+        $submit = fn () => Livewire::test(NewsletterSignup::class)
+            ->set('email', 'victim@example.com')
+            ->set('consent', true)
+            ->call('submit')
+            ->assertSet('submitted', true);
+
+        $submit();
+        $submit();
+        $submit();
+
+        Mail::assertSent(ConfirmNewsletterSubscription::class, 1);
+
+        $this->travel(NewsletterSubscription::CONFIRMATION_RESEND_COOLDOWN_MINUTES + 1)->minutes();
+        $submit();
+
+        Mail::assertSent(ConfirmNewsletterSubscription::class, 2);
+    }
+
+    public function test_invalid_attempts_count_toward_the_rate_limit(): void
+    {
+        foreach (range(1, 5) as $attempt) {
+            Livewire::test(NewsletterSignup::class)->set('email', 'not-an-email')->call('submit');
+        }
+
+        Livewire::test(NewsletterSignup::class)
+            ->set('email', 'real@example.com')
+            ->set('consent', true)
+            ->call('submit')
+            ->assertHasErrors('email')
+            ->assertSet('submitted', false);
+
+        Mail::assertNothingSent();
+    }
+
+    public function test_a_mail_failure_still_saves_the_signup_and_shows_success(): void
+    {
+        Mail::shouldReceive('to')->andThrow(new \RuntimeException('SMTP is down'));
+
+        Livewire::test(NewsletterSignup::class)
+            ->set('email', 'buyer@example.com')
+            ->set('consent', true)
+            ->call('submit')
+            ->assertHasNoErrors()
+            ->assertSet('submitted', true);
+
+        $this->assertDatabaseHas('newsletter_subscriptions', ['email' => 'buyer@example.com', 'confirmation_sent_at' => null]);
+    }
+
+    public function test_email_field_keeps_its_height_when_stacked_on_phones(): void
+    {
+        $html = Livewire::test(NewsletterSignup::class)->html();
+
+        preg_match('/id="newsletter-email".*?class="([^"]+)"/s', $html, $match);
+        $classes = explode(' ', $match[1]);
+
+        $this->assertContains('h-12', $classes);
+        $this->assertContains('sm:flex-1', $classes);
+        $this->assertNotContains('flex-1', $classes, 'An unprefixed flex-1 collapses the input to its content height in the stacked phone layout.');
+    }
+
+    public function test_bangla_confirmation_mail_states_the_link_lifetime_in_bangla_digits(): void
+    {
+        $subscription = NewsletterSubscription::factory()->create(['locale' => 'bn']);
+
+        $mail = (new ConfirmNewsletterSubscription($subscription))->locale('bn');
+
+        $mail->assertSeeInHtml('এই লিংকটি ৭ দিন কার্যকর থাকবে।');
+    }
+
     public function test_unsubscribe_link_unsubscribes(): void
     {
         $subscription = NewsletterSubscription::factory()->confirmed()->create();

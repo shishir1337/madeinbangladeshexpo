@@ -82,6 +82,20 @@ class LocaleFormatter
         ]);
     }
 
+    /**
+     * Free text such as a source and period ("EPB, FY2025-26") with its ASCII digits in the locale's digits.
+     */
+    public function digits(string $text, ?string $locale = null): string
+    {
+        $map = [];
+
+        foreach (range(0, 9) as $digit) {
+            $map[(string) $digit] = $this->plain($digit, $locale);
+        }
+
+        return strtr($text, $map);
+    }
+
     private function resolve(?string $locale): Locale
     {
         return $locale === null ? $this->locales->current() : $this->locales->get($locale);

@@ -56,6 +56,14 @@ class UiComponentsTest extends TestCase
         $this->assertMatchesRegularExpression('/<summary[^>]*>[\s\S]*Is entry free\?/', $html);
     }
 
+    public function test_stat_source_keeps_aa_contrast_on_dark_tiles(): void
+    {
+        $html = Blade::render('<x-ui.stat :value="1" label="Trade" source="UN Comtrade, CY2025" />');
+
+        $this->assertStringContainsString('on-dark:text-white/70', $html);
+        $this->assertStringNotContainsString('text-white/55', $html);
+    }
+
     public function test_stat_renders_the_final_value_in_the_page_language(): void
     {
         app()->setLocale('bn');

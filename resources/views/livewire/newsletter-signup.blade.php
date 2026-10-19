@@ -27,7 +27,7 @@
                         inputmode="email"
                         placeholder="{{ __('newsletter.placeholder') }}"
                         @error('email') aria-invalid="true" aria-describedby="newsletter-email-error" @enderror
-                        class="h-12 min-w-0 flex-1 rounded-full border-0 bg-cream px-5 text-ink ring-1 ring-sand transition placeholder:text-ink-soft/70 focus:bg-white focus:ring-2 focus:ring-navy focus:outline-none aria-invalid:ring-crimson"
+                        class="h-12 min-w-0 sm:flex-1 rounded-full border-0 bg-cream px-5 text-ink ring-1 ring-sand transition placeholder:text-ink-soft/70 focus:bg-white focus:ring-2 focus:ring-navy focus:outline-none aria-invalid:ring-crimson"
                     >
                     <x-ui.button type="submit" wire:loading.attr="disabled" wire:target="submit">
                         <span wire:loading.remove wire:target="submit">{{ __('newsletter.submit') }}</span>

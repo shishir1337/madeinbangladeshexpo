@@ -46,6 +46,19 @@ class HomePageTest extends TestCase
             ->assertSee('২২–২৫ মার্চ ২০২৭');
     }
 
+    public function test_bangla_home_shows_source_periods_in_bangla_digits(): void
+    {
+        $this->createCurrentEdition();
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/bn')
+            ->assertOk()
+            ->assertSee('EPB, FY২০২৫-২৬')
+            ->assertSee('ComexStat, ২০২৫')
+            ->assertDontSee('FY2025-26')
+            ->assertDontSee('ComexStat, 2025');
+    }
+
     public function test_home_renders_without_a_current_edition(): void
     {
         $this->get('/')

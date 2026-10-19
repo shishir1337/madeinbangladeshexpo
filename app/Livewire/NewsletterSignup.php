@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Throwable;
 
 /**
  * Double opt-in newsletter sign-up. Every outcome (new, pending, already confirmed, bot) shows the same
@@ -51,6 +52,8 @@ class NewsletterSignup extends Component
             return;
         }
 
+        RateLimiter::hit($rateLimitKey);
+
         if ($this->website !== '') {
             $this->submitted = true;
 
@@ -70,8 +73,6 @@ class NewsletterSignup extends Component
             ],
         );
 
-        RateLimiter::hit($rateLimitKey);
-
         $subscription = NewsletterSubscription::firstOrNew(['email' => Str::lower(trim($this->email))]);
 
         if (! $subscription->exists || ! $subscription->isConfirmed()) {
@@ -84,11 +85,32 @@ class NewsletterSignup extends Component
                 'unsubscribed_at' => null,
             ])->save();
 
-            Mail::to($subscription->email)->locale($subscription->locale)->send(new ConfirmNewsletterSubscription($subscription));
+            $this->sendConfirmation($subscription);
         }
 
         $this->reset('email', 'consent');
         $this->submitted = true;
+    }
+
+    /**
+     * Send the confirmation email at most once per cooldown per address, so the form cannot be used to flood
+     * someone's inbox. A mail failure is reported, not shown: the sign-up is saved and the answer stays the same.
+     */
+    private function sendConfirmation(NewsletterSubscription $subscription): void
+    {
+        if ($subscription->confirmation_sent_at?->gt(now()->subMinutes(NewsletterSubscription::CONFIRMATION_RESEND_COOLDOWN_MINUTES))) {
+            return;
+        }
+
+        try {
+            Mail::to($subscription->email)->locale($subscription->locale)->send(new ConfirmNewsletterSubscription($subscription));
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return;
+        }
+
+        $subscription->forceFill(['confirmation_sent_at' => now()])->save();
     }
 
     public function render(): View

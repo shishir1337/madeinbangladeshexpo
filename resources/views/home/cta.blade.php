@@ -3,7 +3,7 @@
 <section data-section="cta" data-tone="green" id="updates" class="relative isolate overflow-hidden bg-green py-16 text-white md:py-24" style="--motif-1: #0a6b4f; --motif-2: #0d5c45; --motif-3: #ffdf00">
     <x-ui.motif variant="tiles" :size="80" class="absolute inset-0 -z-10 opacity-40 [mask-image:linear-gradient(to_right,transparent,black_70%)]" />
 
-    <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+    <div class="container-site grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
         <div>
             <h2 class="font-display text-display-lg font-semibold text-white">{{ __('home.cta.title') }}</h2>
             <p class="mt-5 max-w-xl text-lead text-white/80">{{ __('home.cta.lead') }}</p>

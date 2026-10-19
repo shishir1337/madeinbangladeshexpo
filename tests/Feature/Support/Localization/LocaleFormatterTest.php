@@ -94,6 +94,16 @@ class LocaleFormatterTest extends TestCase
         $this->assertSame('2026', $formatter->plain(2026, 'en'));
     }
 
+    public function test_digits_rewrites_ascii_digits_in_free_text_for_the_locale(): void
+    {
+        $formatter = app(LocaleFormatter::class);
+
+        $this->assertSame('EPB, FY২০২৫-২৬', $formatter->digits('EPB, FY2025-26', 'bn'));
+        $this->assertSame('USDA FAS, MY২০২৪/২৫', $formatter->digits('USDA FAS, MY2024/25', 'bn'));
+        $this->assertSame('ComexStat, 2025', $formatter->digits('ComexStat, 2025', 'pt_BR'));
+        $this->assertSame('ComexStat, 2025', $formatter->digits('ComexStat, 2025', 'en'));
+    }
+
     public function test_uses_the_current_locale_when_none_is_given(): void
     {
         app()->setLocale('bn');

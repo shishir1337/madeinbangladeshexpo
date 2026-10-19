@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\NewsletterSubscription;
+use App\Support\Localization\LocaleFormatter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -37,7 +38,7 @@ class ConfirmNewsletterSubscription extends Mailable
             markdown: 'mail.newsletter.confirm',
             with: [
                 'url' => $this->subscription->confirmationUrl(),
-                'days' => NewsletterSubscription::CONFIRMATION_LINK_LIFETIME_DAYS,
+                'days' => app(LocaleFormatter::class)->plain(NewsletterSubscription::CONFIRMATION_LINK_LIFETIME_DAYS),
             ],
         );
     }

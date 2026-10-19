@@ -11,13 +11,18 @@ use Illuminate\Support\Facades\URL;
 /**
  * A double opt-in newsletter subscription. Nothing is sent but the confirmation mail until `confirmed_at` is set.
  */
-#[Fillable(['email', 'locale', 'consent_version', 'consented_at', 'consent_ip', 'confirmed_at', 'unsubscribed_at'])]
+#[Fillable(['email', 'locale', 'consent_version', 'consented_at', 'consent_ip', 'confirmation_sent_at', 'confirmed_at', 'unsubscribed_at'])]
 class NewsletterSubscription extends Model
 {
     /** @use HasFactory<NewsletterSubscriptionFactory> */
     use HasFactory;
 
     public const CONFIRMATION_LINK_LIFETIME_DAYS = 7;
+
+    /**
+     * One confirmation email per address in this window, however often the form is submitted for it.
+     */
+    public const CONFIRMATION_RESEND_COOLDOWN_MINUTES = 15;
 
     public function isConfirmed(): bool
     {
@@ -53,6 +58,7 @@ class NewsletterSubscription extends Model
     {
         return [
             'consented_at' => 'immutable_datetime',
+            'confirmation_sent_at' => 'immutable_datetime',
             'confirmed_at' => 'immutable_datetime',
             'unsubscribed_at' => 'immutable_datetime',
         ];

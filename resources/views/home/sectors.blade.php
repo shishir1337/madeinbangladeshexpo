@@ -38,7 +38,7 @@
                                 </p>
                                 <p class="mt-1 text-sm leading-snug text-ink">{{ $sector->figure_label }}</p>
                                 @if ($sector->figure_source)
-                                    <p class="mt-1 text-xs text-ink-soft">{{ $sector->figure_source }}</p>
+                                    <p class="mt-1 text-xs text-ink-soft">{{ $page->formatter()->digits($sector->figure_source) }}</p>
                                 @endif
                             </div>
                         @endif

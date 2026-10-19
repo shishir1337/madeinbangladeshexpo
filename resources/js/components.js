@@ -65,9 +65,10 @@ export function registerComponents(Alpine) {
     }));
 
     /**
-     * A live HH:MM clock for a time zone, plus whether it is office hours there (Mon–Fri, 09:00–18:00).
+     * A live HH:MM clock for a time zone, plus whether it is office hours there (09:00–18:00 outside the
+     * weekend; Bangladesh's weekend is Friday and Saturday).
      */
-    Alpine.data('clock', (timeZone) => ({
+    Alpine.data('clock', (timeZone, weekend = timeZone === 'Asia/Dhaka' ? ['Fri', 'Sat'] : ['Sat', 'Sun']) => ({
         time: '',
         open: false,
 
@@ -85,7 +86,7 @@ export function registerComponents(Alpine) {
             const hour = Number(parts.hour);
 
             this.time = this.formatter.format(now);
-            this.open = !['Sat', 'Sun'].includes(parts.weekday) && hour >= 9 && hour < 18;
+            this.open = !weekend.includes(parts.weekday) && hour >= 9 && hour < 18;
         },
     }));
 

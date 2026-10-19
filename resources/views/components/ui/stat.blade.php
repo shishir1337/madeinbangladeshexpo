@@ -19,6 +19,6 @@
     ])>@if ($prefix)<span class="mr-0.5 text-[0.55em] font-medium align-[0.32em]">{{ $prefix }}</span>@endif<span data-count-to="{{ $value }}" data-count-decimals="{{ $decimals }}">{{ $formatter->number($value, decimals: $decimals) }}</span>@if ($suffix)<span class="ml-0.5 text-[0.55em] font-medium">{{ $suffix }}</span>@endif</p>
     <p class="mt-3 leading-snug text-ink on-dark:text-white/85">{{ $label }}</p>
     @if ($source)
-        <p class="mt-2 text-xs leading-snug text-ink-soft on-dark:text-white/55">{{ $source }}</p>
+        <p class="mt-2 text-xs leading-snug text-ink-soft on-dark:text-white/70">{{ $formatter->digits($source) }}</p>
     @endif
 </div>

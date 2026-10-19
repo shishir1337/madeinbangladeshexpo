@@ -5,7 +5,6 @@
     $columns = collect($shell->navigation->footer());
     $legal = $columns->firstWhere('key', 'legal');
     $columns = $columns->reject(fn (array $group): bool => $group['key'] === 'legal')->values();
-    $contact = $shell->navigation->contact();
     $settings = $shell->settings;
 @endphp
 
@@ -27,8 +26,8 @@
             </div>
         </div>
 
-        @if ($columns->isNotEmpty() || $contact)
-            <nav aria-label="{{ __('nav.footer') }}" class="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+        @if ($columns->isNotEmpty())
+            <nav aria-label="{{ __('nav.footer') }}" class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 xl:grid-cols-5">
                 @foreach ($columns as $group)
                     <div>
                         <h2 class="font-sans text-sm font-semibold text-yellow">{{ $group['label'] }}</h2>
@@ -38,17 +37,9 @@
                                     <a href="{{ $item['url'] }}" class="text-[0.95rem] text-white/75 transition-colors hover:text-white">{{ $item['label'] }}</a>
                                 </li>
                             @endforeach
-                            @if ($loop->last && $contact)
-                                <li>
-                                    <a href="{{ $contact['url'] }}" class="text-[0.95rem] text-white/75 transition-colors hover:text-white">{{ $contact['label'] }}</a>
-                                </li>
-                            @endif
                         </ul>
                     </div>
                 @endforeach
-                @if ($columns->isEmpty() && $contact)
-                    <a href="{{ $contact['url'] }}" class="text-white/75 hover:text-white">{{ $contact['label'] }}</a>
-                @endif
             </nav>
         @endif
     </div>

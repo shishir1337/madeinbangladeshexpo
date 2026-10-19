@@ -87,12 +87,8 @@ class SiteShellTest extends TestCase
             ->assertSee('href="tel:+8801553676767"', false);
     }
 
-    public function test_header_ctas_appear_once_their_pages_exist(): void
+    public function test_header_ctas_link_to_apply_and_register(): void
     {
-        $this->get('/')->assertDontSee('Apply to exhibit');
-
-        $this->registerPages(['register', 'apply']);
-
         $this->get('/')
             ->assertSee('Apply to exhibit')
             ->assertSee('href="'.localized_route('register', locale: 'en').'"', false);

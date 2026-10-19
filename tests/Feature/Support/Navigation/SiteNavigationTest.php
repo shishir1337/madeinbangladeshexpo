@@ -8,31 +8,6 @@ use Tests\TestCase;
 
 class SiteNavigationTest extends TestCase
 {
-    public function test_links_to_pages_that_do_not_exist_yet_are_hidden(): void
-    {
-        $missing = collect(SiteNavigation::routeNames())->first(fn (string $route): bool => ! Route::has("en.{$route}"));
-
-        if ($missing === null) {
-            $this->markTestSkipped('Every page in the navigation exists.');
-        }
-
-        $listed = function (): array {
-            $navigation = app(SiteNavigation::class);
-
-            return collect($navigation->footer())
-                ->flatMap(fn (array $group): array => array_column($group['items'], 'route'))
-                ->push($navigation->contact()['route'] ?? null)
-                ->filter()
-                ->all();
-        };
-
-        $this->assertNotContains($missing, $listed());
-
-        $this->registerLocalizedRoute($missing);
-
-        $this->assertContains($missing, $listed());
-    }
-
     public function test_items_carry_localized_urls_labels_and_icons(): void
     {
         app()->setLocale('pt_BR');

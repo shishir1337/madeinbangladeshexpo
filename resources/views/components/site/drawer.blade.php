@@ -1,6 +1,6 @@
 @props([
     'groups',
-    'contact' => null,
+    'account' => null,
 ])
 
 @inject('shell', 'App\View\SiteShell')
@@ -84,11 +84,11 @@
                     </li>
                 @endforeach
 
-                @if ($contact)
+                @if ($account)
                     <li>
-                        <a href="{{ $contact['url'] }}" class="flex items-center justify-between py-4 font-display text-lg font-semibold text-navy">
-                            {{ $contact['label'] }}
-                            <x-ui.icon name="arrow-right" class="size-5" />
+                        <a href="{{ $account['url'] }}" @if ($account['active']) aria-current="page" @endif class="flex items-center justify-between py-4 font-display text-lg font-semibold text-navy">
+                            {{ $account['label'] }}
+                            <x-ui.icon name="log-in" class="size-5" />
                         </a>
                     </li>
                 @endif

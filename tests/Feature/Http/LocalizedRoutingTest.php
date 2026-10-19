@@ -104,11 +104,11 @@ class LocalizedRoutingTest extends TestCase
 
     public function test_missing_portuguese_slug_falls_back_to_english_slug(): void
     {
-        Lang::addLines(['routes.press' => 'press'], 'en');
-        Route::localized(fn () => Route::get(localized_slug('press'), fn () => app()->getLocale())->name('press'));
+        Lang::addLines(['routes.press-kit' => 'press-kit'], 'en');
+        Route::localized(fn () => Route::get(localized_slug('press-kit'), fn () => app()->getLocale())->name('press-kit'));
         Route::getRoutes()->refreshNameLookups();
 
-        $this->get('/pt/press')->assertOk()->assertSee('pt_BR');
+        $this->get('/pt/press-kit')->assertOk()->assertSee('pt_BR');
     }
 
     public function test_locale_does_not_leak_between_requests(): void

@@ -5,9 +5,11 @@ use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OrganisationPagesController;
+use App\Http\Controllers\PageInPreparationController;
 use App\Http\Controllers\RedirectLegacyLocalePrefix;
 use App\Http\Controllers\SectorController;
 use App\Http\Controllers\StyleguideController;
+use App\Support\Navigation\SiteNavigation;
 use Illuminate\Support\Facades\Route;
 
 Route::localized(function (): void {
@@ -23,6 +25,10 @@ Route::localized(function (): void {
     Route::get(localized_slug('archive'), ArchiveController::class)->name('archive');
     Route::get(localized_slug('gallery'), [GalleryController::class, 'index'])->name('gallery');
     Route::get(localized_slug('gallery').'/{album}', [GalleryController::class, 'show'])->name('gallery.show');
+
+    foreach (SiteNavigation::pagesInPreparation() as $page) {
+        Route::get(localized_slug($page), PageInPreparationController::class)->name($page);
+    }
 
     Route::get(localized_slug('newsletter').'/{subscription}/confirm', [NewsletterController::class, 'confirm'])->name('newsletter.confirm');
     Route::get(localized_slug('newsletter').'/{subscription}/unsubscribe', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');

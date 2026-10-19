@@ -5,8 +5,9 @@ namespace App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
 
 /**
- * Every public page the site will have, grouped as the header, drawer and footer show them. Entries whose
- * localized route does not exist yet are left out, so the shell never links to a page that is not built.
+ * Every public page the site will have, grouped as the header, drawer and footer show them. Pages not built yet
+ * are served by a "being prepared" page (see pagesInPreparation()), so the shell always shows the whole site
+ * and never links to a 404. An entry with no route at all is left out.
  */
 class SiteNavigation
 {
@@ -24,6 +25,7 @@ class SiteNavigation
             'programme' => 'calendar',
             'speakers' => 'mic',
             'partners' => 'award',
+            'exhibitors' => 'building',
             'archive' => 'image',
         ],
         'take-part' => [
@@ -35,6 +37,7 @@ class SiteNavigation
             'visit' => 'shopping-bag',
             'sponsorship' => 'sparkles',
             'register' => 'ticket',
+            'register-interest' => 'mail',
         ],
         'plan-your-trip' => [
             'venue' => 'map-pin',
@@ -61,26 +64,41 @@ class SiteNavigation
         'accessibility' => 'accessibility',
     ];
 
-    private const CONTACT = ['contact' => 'message-circle'];
+    /**
+     * @var array<string, string>
+     */
+    private const HELP = [
+        'faq' => 'info',
+        'contact' => 'message-circle',
+    ];
+
+    private const ACCOUNT = ['login' => 'log-in'];
 
     /**
-     * The header's mega-menu groups.
+     * Pages that have their own controller and view; every other entry is served by the preparation page.
+     *
+     * @var list<string>
+     */
+    private const BUILT = ['about', 'organiser', 'committee', 'sectors', 'archive', 'gallery'];
+
+    /**
+     * The header's mega-menu groups, ending with help (FAQ and contact).
      *
      * @return list<array{key: string, label: string, active: bool, items: list<array{route: string, url: string, label: string, description: string, icon: string, active: bool}>}>
      */
     public function primary(): array
     {
-        return $this->groups(self::GROUPS);
+        return $this->groups([...self::GROUPS, 'help' => self::HELP]);
     }
 
     /**
-     * The footer's columns: the menu groups plus legal pages.
+     * The footer's columns: the menu groups, help and legal pages.
      *
      * @return list<array{key: string, label: string, active: bool, items: list<array{route: string, url: string, label: string, description: string, icon: string, active: bool}>}>
      */
     public function footer(): array
     {
-        return $this->groups([...self::GROUPS, 'legal' => self::LEGAL]);
+        return $this->groups([...self::GROUPS, 'help' => self::HELP, 'legal' => self::LEGAL]);
     }
 
     /**
@@ -90,7 +108,33 @@ class SiteNavigation
      */
     public function contact(): ?array
     {
-        return $this->items(self::CONTACT)[0] ?? null;
+        return $this->items(['contact' => self::HELP['contact']])[0] ?? null;
+    }
+
+    /**
+     * The sign-in link for exhibitors, buyers and delegates.
+     *
+     * @return array{route: string, url: string, label: string, description: string, icon: string, active: bool}|null
+     */
+    public function account(): ?array
+    {
+        return $this->items(self::ACCOUNT)[0] ?? null;
+    }
+
+    /**
+     * The footer column a page sits in, e.g. "take-part" for "exhibit", or null when it is in none.
+     *
+     * @return array{key: string, label: string, active: bool, items: list<array{route: string, url: string, label: string, description: string, icon: string, active: bool}>}|null
+     */
+    public function groupOf(string $route): ?array
+    {
+        foreach ($this->footer() as $group) {
+            if (in_array($route, array_column($group['items'], 'route'), true)) {
+                return $group;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -108,7 +152,22 @@ class SiteNavigation
      */
     public static function routeNames(): array
     {
-        return array_keys(array_merge(...array_values(self::GROUPS), ...[self::LEGAL, self::CONTACT]));
+        return array_keys(array_merge(...array_values(self::GROUPS), ...[self::HELP, self::LEGAL, self::ACCOUNT]));
+    }
+
+    /**
+     * Navigation pages without their own controller yet, which the preparation page serves.
+     *
+     * @return list<string>
+     */
+    public static function pagesInPreparation(): array
+    {
+        return array_values(array_diff(self::routeNames(), self::BUILT));
+    }
+
+    public static function isInPreparation(string $route): bool
+    {
+        return in_array($route, self::pagesInPreparation(), true);
     }
 
     /**

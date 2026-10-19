@@ -4,8 +4,9 @@ return [
     'groups' => [
         'the-expo' => 'The expo',
         'take-part' => 'Take part',
-        'plan-your-trip' => 'Plan your trip',
+        'plan-your-trip' => 'Your trip',
         'news-media' => 'News & media',
+        'help' => 'Help',
         'legal' => 'Legal',
     ],
 
@@ -17,6 +18,7 @@ return [
         'programme' => ['label' => 'Programme', 'description' => 'Four days of business sessions, in both time zones'],
         'speakers' => ['label' => 'Speakers', 'description' => 'Who is speaking, and how to apply to speak'],
         'partners' => ['label' => 'Partners', 'description' => 'The institutions and companies behind the expo'],
+        'exhibitors' => ['label' => 'Exhibitor directory', 'description' => 'Who is exhibiting, searchable by sector and product'],
         'archive' => ['label' => '2025 edition', 'description' => 'The first edition in pictures, figures and press'],
 
         'exhibit' => ['label' => 'Exhibit', 'description' => 'Show your products to buyers from Brazil and Latin America'],
@@ -27,6 +29,7 @@ return [
         'visit' => ['label' => 'Visit as a buyer', 'description' => 'Free trade registration for importers and retailers'],
         'sponsorship' => ['label' => 'Sponsorship', 'description' => 'Partner with the expo and reach both markets'],
         'register' => ['label' => 'Register', 'description' => 'Buyer, trade visitor, delegate or press: choose yours'],
+        'register-interest' => ['label' => 'Register your interest', 'description' => 'Hear first when registration opens'],
 
         'venue' => ['label' => 'Venue', 'description' => 'The venue, how to get there and what is inside'],
         'city-guide' => ['label' => 'São Paulo city guide', 'description' => 'Transport, food, prayer and wholesale districts nearby'],
@@ -39,12 +42,15 @@ return [
         'gallery' => ['label' => 'Photo gallery', 'description' => 'Albums from the expo and BBCCI events'],
 
         'contact' => ['label' => 'Contact', 'description' => 'Talk to the expo team in Dhaka and São Paulo'],
+        'faq' => ['label' => 'FAQ', 'description' => 'Answers for exhibitors, buyers, visitors and press'],
 
         'privacy' => ['label' => 'Privacy notice', 'description' => 'How we handle your personal data'],
         'terms' => ['label' => 'Terms of use', 'description' => 'The rules for using this site and taking part'],
         'refunds' => ['label' => 'Cancellations & refunds', 'description' => 'What happens if plans change'],
         'cookies' => ['label' => 'Cookies', 'description' => 'The few cookies this site uses'],
         'accessibility' => ['label' => 'Accessibility', 'description' => 'Our accessibility commitment and how to get help'],
+
+        'login' => ['label' => 'Sign in', 'description' => 'Your applications, payments, badges and meetings'],
     ],
 
     'menu' => 'Menu',

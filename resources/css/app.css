@@ -1,8 +1,6 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/anek-bangla';
-@import '@fontsource-variable/noto-sans-bengali';
 
+@import './fonts.css';
 @import './tokens.css';
 @import './base.css';
 @import './components.css';
@@ -14,4 +12,8 @@
 @source '../js';
 @source '../../app';
 
-@custom-variant on-dark (&:where([data-tone='midnight'] *, [data-tone='green'] *, .on-dark *));
+/*
+ * Styles for content on a dark section (midnight or green). They stop at a light container nested inside
+ * the dark one (a white card on a midnight band), so light cards never inherit white-on-white text.
+ */
+@custom-variant on-dark (&:where([data-tone='midnight'] *, [data-tone='green'] *, .on-dark *):not(:where(:is([data-tone='midnight'], [data-tone='green']) :is([data-tone='white'], [data-tone='cream'], [data-tone='sand']) *)));

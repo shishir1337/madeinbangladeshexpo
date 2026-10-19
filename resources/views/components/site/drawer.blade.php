@@ -14,7 +14,7 @@
     role="dialog"
     aria-modal="true"
     aria-label="{{ __('nav.menu') }}"
-    class="fixed inset-0 z-50 lg:hidden"
+    class="fixed inset-0 z-50 xl:hidden"
 >
     <div
         x-show="drawer"

@@ -16,7 +16,7 @@ export function registerShell(Alpine) {
             window.addEventListener('scroll', onScroll, { passive: true });
 
             // Leaving the drawer open while resizing to desktop would leave the page inert.
-            window.matchMedia('(min-width: 64rem)').addEventListener('change', (event) => {
+            window.matchMedia('(min-width: 80rem)').addEventListener('change', (event) => {
                 if (event.matches) {
                     this.drawer = false;
                 }
@@ -25,6 +25,11 @@ export function registerShell(Alpine) {
 
         toggle(key) {
             this.open = this.open === key ? null : key;
+        },
+
+        openAndFocus(key) {
+            this.open = key;
+            this.$nextTick(() => document.querySelector(`#mega-${key} a`)?.focus());
         },
 
         closeAll(returnFocus = true) {
@@ -95,10 +100,11 @@ export function registerShell(Alpine) {
     }));
 
     Alpine.data('motionToggle', () => ({
-        reduced: document.documentElement.dataset.motion === 'reduced',
+        reduced: !window.mbe.motionAllowed(),
 
         toggle() {
-            window.mbe.setMotionPreference(!this.reduced);
+            this.reduced = !this.reduced;
+            window.mbe.setMotionPreference(this.reduced);
         },
     }));
 }

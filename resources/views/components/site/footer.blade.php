@@ -101,16 +101,16 @@
                 x-on:click="toggle()"
                 class="mt-4 inline-flex items-center gap-3 rounded-full py-1 pr-2 text-[0.95rem] text-white/75 hover:text-white"
             >
-                <span class="relative h-6 w-11 rounded-full bg-white/15 ring-1 ring-white/20 transition-colors" x-bind:class="reduced && '!bg-mint'">
+                <span class="relative h-6 w-11 rounded-full bg-white/15 ring-1 ring-white/20 transition-colors" x-bind:class="reduced && '!bg-mint'" aria-hidden="true">
                     <span class="absolute top-1 left-1 size-4 rounded-full bg-white shadow transition-transform duration-200" x-bind:class="reduced && 'translate-x-5'"></span>
                 </span>
-                <span x-text="reduced ? @js(__('site.motion.allow')) : @js(__('site.motion.reduce'))">{{ __('site.motion.reduce') }}</span>
+                <span>{{ __('site.motion.reduce') }}</span>
             </button>
         </div>
     </div>
 
     <div class="border-t border-white/10">
-        <div class="container-site flex flex-col gap-4 pt-6 pb-28 text-sm text-white/55 sm:pb-6 md:flex-row md:items-center md:justify-between">
+        <div class="container-site flex flex-col gap-4 pt-6 pb-28 text-sm text-white/55 md:flex-row md:items-center md:justify-between">
             <p>{{ __('site.footer.copyright', ['year' => $shell->year(), 'organiser' => $settings->organiser_name]) }}</p>
             @if ($legal)
                 <ul class="flex flex-wrap gap-x-5 gap-y-2">

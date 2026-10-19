@@ -7,6 +7,7 @@
         x-data="{ open: false }"
         x-on:keydown.escape.stop="open = false; $refs.button.focus()"
         x-on:click.outside="open = false"
+        x-on:focusout="if (! $el.contains($event.relatedTarget)) open = false"
         class="relative"
     >
         <button
@@ -16,9 +17,9 @@
             aria-expanded="false"
             x-bind:aria-expanded="open.toString()"
             aria-controls="language-menu"
-            class="inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-ink ring-1 ring-inset ring-sand transition hover:bg-white"
+            class="inline-flex h-10 items-center gap-1 rounded-full px-2.5 text-sm font-semibold text-ink ring-1 ring-inset ring-sand transition hover:bg-white sm:gap-1.5 sm:px-3"
         >
-            <x-ui.icon name="globe" class="size-4" />
+            <x-ui.icon name="globe" class="size-4 max-sm:hidden" />
             <span lang="{{ $currentLocale->htmlLang }}">{{ $currentLocale->shortName }}</span>
             <x-ui.icon name="chevron-down" class="size-3.5 opacity-60 transition-transform" x-bind:class="open && 'rotate-180'" />
             <span class="sr-only">{{ __('site.language') }}</span>

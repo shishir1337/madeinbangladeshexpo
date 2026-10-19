@@ -14,7 +14,7 @@
     x-transition:leave="transition duration-150 ease-in"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    class="absolute inset-x-0 top-full hidden lg:block"
+    class="absolute inset-x-0 top-full hidden xl:block"
 >
     <div class="container-site pt-2 pb-6">
         <div class="grid overflow-hidden rounded-[1.75rem] bg-white shadow-lift ring-1 ring-ink/5 lg:grid-cols-[minmax(0,1fr)_19rem] xl:grid-cols-[minmax(0,1fr)_21rem]">

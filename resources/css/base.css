@@ -46,6 +46,15 @@
         font-weight: 600;
     }
 
+    /* The display utilities read these variables, so Bangla headings get room for conjuncts and vowel signs. */
+    :lang(bn) {
+        --text-display-2xl--line-height: 1.16;
+        --text-display-xl--line-height: 1.2;
+        --text-display-lg--line-height: 1.24;
+        --text-display-md--line-height: 1.28;
+        --text-display-sm--line-height: 1.32;
+    }
+
     :focus-visible {
         outline: 3px solid var(--color-navy);
         outline-offset: 3px;

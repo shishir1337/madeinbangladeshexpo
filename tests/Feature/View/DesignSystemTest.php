@@ -19,6 +19,27 @@ class DesignSystemTest extends TestCase
             ->assertSee('<meta name="theme-color" content="#004F3A">', false);
     }
 
+    public function test_smooth_scrolling_is_opt_in(): void
+    {
+        $this->assertStringNotContainsString('data-smooth', Blade::render('<x-layouts.site title="Plain">Plain page</x-layouts.site>'));
+        $this->assertStringContainsString('data-smooth', Blade::render('<x-layouts.site title="Marketing" smooth>Marketing page</x-layouts.site>'));
+    }
+
+    public function test_os_reduced_motion_is_applied_before_first_paint(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/<head>[\\s\\S]*prefers-reduced-motion: reduce[\\s\\S]*<\\/head>/', $html);
+    }
+
+    public function test_reduce_motion_switch_keeps_one_accessible_name(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('role="switch"', $html);
+        $this->assertStringNotContainsString('x-text="reduced ?', $html);
+    }
+
     public function test_motif_component_renders_an_svg_pattern(): void
     {
         foreach (['jamdani', 'tiles', 'band'] as $variant) {

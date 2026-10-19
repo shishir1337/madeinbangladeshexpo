@@ -25,7 +25,7 @@
 @endphp
 
 @if ($href)
-    <a href="{{ $href }}" {{ $attributes->class($classes) }}>{{ $slot }}</a>
+    <a href="{{ $href }}" data-tone="{{ $tone }}" {{ $attributes->class($classes) }}>{{ $slot }}</a>
 @else
-    <div {{ $attributes->class($classes) }}>{{ $slot }}</div>
+    <div data-tone="{{ $tone }}" {{ $attributes->class($classes) }}>{{ $slot }}</div>
 @endif

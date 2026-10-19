@@ -26,6 +26,9 @@ export function motionAllowed() {
     return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+/**
+ * Stores the visitor's choice and applies it at once, without reloading the page.
+ */
 export function setMotionPreference(reduced) {
     try {
         window.localStorage.setItem(STORAGE_KEY, reduced ? 'reduced' : 'full');
@@ -34,5 +37,4 @@ export function setMotionPreference(reduced) {
     }
 
     document.documentElement.dataset.motion = reduced ? 'reduced' : 'full';
-    window.location.reload();
 }

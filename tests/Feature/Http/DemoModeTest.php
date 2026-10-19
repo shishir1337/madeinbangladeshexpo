@@ -19,6 +19,16 @@ class DemoModeTest extends TestCase
             ->assertSee('Site de demonstração');
     }
 
+    public function test_demo_ribbon_is_a_styled_banner(): void
+    {
+        config(['expo.demo_mode' => true]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('class="demo-ribbon', false)
+            ->assertSee('bg-crimson', false);
+    }
+
     public function test_without_demo_mode_pages_are_indexable_and_show_no_ribbon(): void
     {
         config(['expo.demo_mode' => false]);

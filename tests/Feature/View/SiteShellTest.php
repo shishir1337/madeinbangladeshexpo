@@ -98,6 +98,59 @@ class SiteShellTest extends TestCase
             ->assertSee('href="'.localized_route('register', locale: 'en').'"', false);
     }
 
+    public function test_header_ctas_only_show_on_wide_screens(): void
+    {
+        $this->registerPages(['register', 'apply']);
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/<a href="[^"]*\/register"[^>]*class="[^"]*max-2xl:hidden/', $html);
+        $this->assertMatchesRegularExpression('/<a href="[^"]*\/apply"[^>]*class="[^"]*max-xl:hidden/', $html);
+        $this->assertStringNotContainsString('hidden md:inline-flex', $html);
+        $this->assertStringNotContainsString('hidden sm:inline-flex', $html);
+    }
+
+    public function test_each_mega_menu_panel_follows_its_trigger_inside_the_navigation(): void
+    {
+        $this->registerPages(['about', 'exhibit']);
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/<nav aria-label="Main navigation"[\s\S]*?aria-controls="mega-the-expo"[\s\S]*?id="mega-the-expo"[\s\S]*?aria-controls="mega-take-part"[\s\S]*?id="mega-take-part"[\s\S]*?<\/nav>/', $html);
+        $this->assertStringContainsString('x-on:focusout=', $html);
+    }
+
+    public function test_footer_reserves_room_for_the_help_button_at_every_width(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/<footer[\s\S]*pb-28[\s\S]*<\/footer>/', $html);
+        $this->assertStringNotContainsString('sm:pb-6', $html);
+    }
+
+    public function test_dismissed_announcement_is_hidden_before_first_paint(): void
+    {
+        $this->createCurrentEdition();
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('data-announcement-key="mbe.announcement.2026"', $html);
+        $this->assertMatchesRegularExpression('/<head>[\s\S]*announcementKey[\s\S]*<\/head>/', $html);
+    }
+
+    public function test_layout_links_the_favicon_set_and_preloads_the_display_font(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('<link rel="icon" href="'.asset('favicon.svg').'" type="image/svg+xml">', $html);
+        $this->assertStringContainsString('<link rel="apple-touch-icon" href="'.asset('apple-touch-icon.png').'">', $html);
+        $this->assertMatchesRegularExpression('/<link rel="preload" href="[^"]*anek-bangla-latin-wght\.woff2" as="font" type="font\/woff2" crossorigin>/', $html);
+
+        foreach (['favicon.svg', 'favicon.ico', 'apple-touch-icon.png', 'fonts/anek-bangla-latin-wght.woff2'] as $file) {
+            $this->assertFileExists(public_path($file));
+        }
+    }
+
     public function test_there_is_exactly_one_language_switcher(): void
     {
         $html = $this->get('/pt')->assertOk()->getContent();

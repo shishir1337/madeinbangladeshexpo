@@ -66,6 +66,12 @@ class UiComponentsTest extends TestCase
         $this->assertStringContainsString('data-count-to="1234567"', $html);
     }
 
+    public function test_cards_declare_their_tone_so_dark_section_styles_stop_at_them(): void
+    {
+        $this->assertStringContainsString('data-tone="white"', Blade::render('<x-ui.card>Light card</x-ui.card>'));
+        $this->assertStringContainsString('data-tone="midnight"', Blade::render('<x-ui.card tone="midnight">Dark card</x-ui.card>'));
+    }
+
     public function test_section_exposes_its_tone(): void
     {
         $this->assertStringContainsString('data-tone="midnight"', Blade::render('<x-ui.section tone="midnight">Hi</x-ui.section>'));

@@ -1,8 +1,23 @@
 /*
- * Motion. [data-reveal] elements are hidden by JS only when they start below the fold and motion is
- * allowed, so content is always visible without JS, with reduced motion, and on first paint.
+ * Motion. [data-reveal] elements are hidden (.reveal-pending) by JS only when they start below the fold and
+ * motion is allowed, so content is always visible without JS, with reduced motion, on first paint and in print.
  */
 @layer base {
+    .reveal-pending {
+        opacity: 0;
+    }
+
+    /* A dismissed announcement is hidden by the inline head script before first paint (no layout shift). */
+    .announcement-dismissed [data-announcement] {
+        display: none;
+    }
+
+    @media print {
+        .reveal-pending {
+            opacity: 1 !important;
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -21,6 +36,10 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+
+    html[data-motion='reduced'] .reveal-pending {
+        opacity: 1;
     }
 
     html.lenis,

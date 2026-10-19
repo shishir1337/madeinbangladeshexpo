@@ -2,7 +2,7 @@
 
 @if ($edition = $shell->edition())
     <div
-        x-data="announcement('mbe.announcement.{{ $edition->slug }}')"
+        x-data="announcement(@js('mbe.announcement.'.$edition->slug))"
         x-show="visible"
         data-announcement
         data-tone="midnight"

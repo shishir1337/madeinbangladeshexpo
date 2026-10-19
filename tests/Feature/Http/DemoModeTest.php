@@ -2,10 +2,13 @@
 
 namespace Tests\Feature\Http;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class DemoModeTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_demo_mode_marks_pages_noindex_and_shows_the_ribbon(): void
     {
         config(['expo.demo_mode' => true]);

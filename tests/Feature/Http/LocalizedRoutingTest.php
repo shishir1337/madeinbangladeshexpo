@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -9,6 +10,8 @@ use Tests\TestCase;
 
 class LocalizedRoutingTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_english_home_renders_at_the_root(): void
     {
         $this->get('/')

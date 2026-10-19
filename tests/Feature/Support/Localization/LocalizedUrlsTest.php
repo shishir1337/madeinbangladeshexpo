@@ -3,12 +3,16 @@
 namespace Tests\Feature\Support\Localization;
 
 use App\Support\Localization\LocalizedUrls;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class LocalizedUrlsTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_home_lists_an_alternate_link_for_every_locale_and_x_default(): void
     {
         $this->get('/pt')
@@ -22,7 +26,7 @@ class LocalizedUrlsTest extends TestCase
     public function test_switcher_links_to_the_same_page_in_other_languages_and_marks_the_current_one(): void
     {
         Lang::addLines(['routes.about' => 'sobre'], 'pt_BR');
-        Route::localized(fn () => Route::get(localized_slug('about'), fn () => view('home'))->name('about'));
+        Route::localized(fn () => Route::get(localized_slug('about'), fn () => Blade::render('<x-layouts.site title="About">About</x-layouts.site>'))->name('about'));
         Route::getRoutes()->refreshNameLookups();
 
         $response = $this->get('/pt/sobre')

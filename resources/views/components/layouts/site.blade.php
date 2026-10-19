@@ -10,6 +10,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <x-demo-ribbon />
+
     <header>
         <x-locale-switcher />
     </header>

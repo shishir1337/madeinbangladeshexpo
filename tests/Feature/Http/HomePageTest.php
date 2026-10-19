@@ -5,6 +5,7 @@ namespace Tests\Feature\Http;
 use App\Models\Edition;
 use App\Models\Stat;
 use App\Models\Venue;
+use Database\Seeders\EditionSeeder;
 use Database\Seeders\HomeContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -160,6 +161,72 @@ class HomePageTest extends TestCase
             ->assertSee('data-route="air"', false)
             ->assertSee('src="'.asset('img/world-dots.svg').'"', false)
             ->assertSeeInOrder(['Bangladesh sells', '281.8', 'Brazil sells', '2.72']);
+    }
+
+    public function test_all_nine_sectors_appear_with_figures(): void
+    {
+        $this->seed(HomeContentSeeder::class);
+
+        $response = $this->get('/')->assertOk();
+
+        foreach (['Garments', 'Home &amp; technical textiles', 'Pharmaceuticals', 'Leather &amp; footwear', 'Jute &amp; jute goods', 'Agro-food &amp; seafood', 'Handicrafts &amp; décor', 'Plastics &amp; toys', 'ICT &amp; software'] as $name) {
+            $response->assertSee($name, false);
+        }
+
+        $response->assertSee('ComexStat, 2025');
+    }
+
+    public function test_where_section_shows_venue_address_and_directions_link(): void
+    {
+        $this->createCurrentEdition()->venue->update(['address_line' => 'Av. Professora Ida Kolb, 513', 'district' => 'Casa Verde', 'state' => 'SP']);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-section="where"', false)
+            ->assertSee('Av. Professora Ida Kolb, 513, Casa Verde, São Paulo-SP')
+            ->assertSee('https://www.google.com/maps/search/?api=1&amp;query=', false);
+    }
+
+    public function test_timeline_runs_from_1972_to_the_current_edition(): void
+    {
+        $this->createCurrentEdition();
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder(['Diplomatic relations', 'A first ministerial visit', 'data-current-edition', 'Made in Bangladesh Expo 2026'], false);
+    }
+
+    public function test_videos_load_nothing_from_youtube_until_played(): void
+    {
+        $this->createCurrentEdition();
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-youtube-id="AhCawT3n2Uo"', false)
+            ->assertDontSee('<iframe', false)
+            ->assertDontSee('youtube.com/embed', false)
+            ->assertDontSee('i.ytimg.com', false);
+    }
+
+    public function test_testimonials_are_attributed(): void
+    {
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder(["This historic event marked a turning point in Bangladesh's global trade outreach.", 'Shahriar Ahmed', 'President, BBCCI']);
+    }
+
+    public function test_partners_grouped_by_role(): void
+    {
+        $this->seed(EditionSeeder::class);
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder(['data-partner-role="organiser"', 'Brazil Bangladesh Chamber of Commerce &amp; Industry', 'data-partner-role="supporter"', 'Embassy of Brazil in Dhaka'], false);
     }
 
     private function createCurrentEdition(): Edition

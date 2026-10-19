@@ -113,6 +113,63 @@ export function registerComponents(Alpine) {
     }));
 
     /**
+     * A photo lightbox in a native modal <dialog> (focus stays inside, Esc closes): ←/→ keys, swipe, caption and
+     * a counter in the page's digits. Focus returns to the thumbnail that opened it.
+     */
+    Alpine.data('lightbox', (photos, counterTemplate) => ({
+        photos,
+        index: 0,
+        opener: null,
+        touchX: null,
+
+        get current() {
+            return this.photos[this.index];
+        },
+
+        get counter() {
+            const lang = document.documentElement.lang || 'en';
+            const number = new Intl.NumberFormat(lang === 'bn' ? 'bn-BD' : lang);
+
+            return counterTemplate.replace(':current', number.format(this.index + 1)).replace(':total', number.format(this.photos.length));
+        },
+
+        open(index, event) {
+            this.index = index;
+            this.opener = event?.currentTarget ?? null;
+            this.$refs.dialog.showModal();
+        },
+
+        close() {
+            this.$refs.dialog.close();
+        },
+
+        closed() {
+            this.opener?.focus();
+        },
+
+        step(by) {
+            this.index = (this.index + by + this.photos.length) % this.photos.length;
+        },
+
+        touchStart(event) {
+            this.touchX = event.changedTouches[0].clientX;
+        },
+
+        touchEnd(event) {
+            if (this.touchX === null) {
+                return;
+            }
+
+            const distance = event.changedTouches[0].clientX - this.touchX;
+            this.touchX = null;
+
+            if (Math.abs(distance) > 48) {
+                this.step(distance < 0 ? 1 : -1);
+            }
+        },
+    }));
+
+    /**
      * An inline YouTube facade: swaps itself for the player on click.
      */
     Alpine.data('youtubeFacade', (youtubeId, title) => ({

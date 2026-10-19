@@ -3,7 +3,9 @@
 namespace Tests\Feature\Http;
 
 use App\Models\Edition;
+use App\Models\Stat;
 use App\Models\Venue;
+use Database\Seeders\HomeContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -55,11 +57,109 @@ class HomePageTest extends TestCase
     {
         Edition::factory()->current()->create(['name' => ['pt_BR' => 'Feira Made in Bangladesh']]);
 
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertDoesNotMatchRegularExpression('/<h1[^>]*>\s*<\/h1>/', $html);
+        $this->assertStringNotContainsString('<title></title>', $html);
+        $this->assertMatchesRegularExpression('/<h1[^>]*>\s*'.preg_quote(config('app.name'), '/').'\s*<\/h1>/', $html);
+    }
+
+    public function test_hero_answers_what_when_where(): void
+    {
+        $this->createCurrentEdition();
+
+        $html = $this->get('/')->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression('/<h1[^>]*>\s*Made in Bangladesh Expo 2026\s*<\/h1>/', $html);
+        $this->assertMatchesRegularExpression('/data-hero[\s\S]*22–25 March 2027[\s\S]*Pro Magno Centro de Eventos/u', $html);
+    }
+
+    public function test_countdown_targets_the_opening_in_sao_paulo_time(): void
+    {
+        $this->travelTo('2026-10-20 12:00:00');
+        $this->createCurrentEdition();
+
         $this->get('/')
             ->assertOk()
-            ->assertDontSee('<h1></h1>', false)
-            ->assertDontSee('<title></title>', false)
-            ->assertSee('<h1>'.config('app.name').'</h1>', false);
+            ->assertSee('data-countdown-target="2027-03-22T13:00:00Z"', false)
+            ->assertSee('data-countdown-state="upcoming"', false);
+    }
+
+    public function test_countdown_never_shows_negative_time(): void
+    {
+        $this->createCurrentEdition();
+
+        $this->travelTo('2027-03-23 15:00:00');
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-countdown-state="live"', false)
+            ->assertDontSee('data-countdown-target', false)
+            ->assertSee('Happening now');
+
+        $this->travelTo('2027-04-01 12:00:00');
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-countdown-state="past"', false)
+            ->assertDontSee('data-countdown-target', false);
+    }
+
+    public function test_home_renders_every_section_without_a_current_edition(): void
+    {
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('<h1', false)
+            ->assertDontSee('data-countdown-state', false)
+            ->assertSee('data-section="paths"', false)
+            ->assertSee('data-section="sectors"', false);
+    }
+
+    public function test_paths_cover_exhibitors_buyers_delegates_and_sponsors(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSeeInOrder(['Exhibit', 'Visit as a buyer', 'Join the delegation', 'Sponsor or report'])
+            ->assertSee('Meet Brazilian suppliers of cotton, sugar, grain and machinery');
+    }
+
+    public function test_every_stat_on_home_shows_its_source(): void
+    {
+        $this->seed(HomeContentSeeder::class);
+
+        $response = $this->get('/')->assertOk();
+
+        Stat::query()->where('placement', 'home')->get()->each(function (Stat $stat) use ($response): void {
+            $response->assertSee("{$stat->source}, {$stat->as_of}");
+        });
+    }
+
+    public function test_bangla_home_uses_bangla_numerals_everywhere(): void
+    {
+        $this->createCurrentEdition();
+        $this->seed(HomeContentSeeder::class);
+
+        $html = $this->get('/bn')->assertOk()->getContent();
+
+        preg_match_all('/data-count-to="[^"]*"[^>]*>([^<]*)</u', $html, $matches);
+
+        $this->assertNotEmpty($matches[1]);
+        foreach ($matches[1] as $rendered) {
+            $this->assertDoesNotMatchRegularExpression('/[0-9]/', $rendered, "ASCII digits in a Bangla stat: {$rendered}");
+            $this->assertMatchesRegularExpression('/[০-৯]/u', $rendered);
+        }
+    }
+
+    public function test_trade_routes_show_both_directions(): void
+    {
+        $this->seed(HomeContentSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-route="sea"', false)
+            ->assertSee('data-route="air"', false)
+            ->assertSee('src="'.asset('img/world-dots.svg').'"', false)
+            ->assertSeeInOrder(['Bangladesh sells', '281.8', 'Brazil sells', '2.72']);
     }
 
     private function createCurrentEdition(): Edition

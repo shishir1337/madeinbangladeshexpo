@@ -2,6 +2,7 @@ import { Alpine, Livewire } from '../../vendor/livewire/livewire/dist/livewire.e
 import { startMotion, stopMotion } from './motion';
 import { motionAllowed, setMotionPreference } from './preferences';
 import { registerShell } from './shell';
+import { registerComponents } from './components';
 
 window.mbe = {
     motionAllowed,
@@ -12,6 +13,7 @@ window.mbe = {
 };
 
 registerShell(Alpine);
+registerComponents(Alpine);
 
 Livewire.start();
 

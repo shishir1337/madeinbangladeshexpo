@@ -31,7 +31,30 @@ class EditionSeeder extends Seeder
                 'district' => 'Casa Verde',
                 'city' => 'São Paulo',
                 'state' => 'SP',
+                'postal_code' => '02518-000',
                 'country_code' => 'BR',
+                'phone' => '+55 11 4010-5100',
+                'website' => 'https://www.promagno.com.br',
+                'highlights' => [
+                    'en' => [
+                        'One pavilion on four floors, with a rooftop food court',
+                        'About 1,000 covered parking spaces',
+                        'About 28 km by road from GRU international airport',
+                        '2.7 km from Palmeiras-Barra Funda metro and train station',
+                    ],
+                    'pt_BR' => [
+                        'Um pavilhão em quatro andares, com praça de alimentação no terraço',
+                        'Cerca de 1.000 vagas de estacionamento cobertas',
+                        'Cerca de 28 km de carro do Aeroporto Internacional de Guarulhos (GRU)',
+                        'A 2,7 km da estação Palmeiras-Barra Funda (metrô e trem)',
+                    ],
+                    'bn' => [
+                        'চার তলাজুড়ে একটি প্যাভিলিয়ন, ছাদে ফুড কোর্ট',
+                        'প্রায় ১,০০০টি ছাউনিযুক্ত পার্কিং',
+                        'জিআরইউ আন্তর্জাতিক বিমানবন্দর থেকে সড়কপথে প্রায় ২৮ কিমি',
+                        'পালমেইরাস-বার্রা ফুন্দা মেট্রো ও ট্রেন স্টেশন থেকে ২.৭ কিমি',
+                    ],
+                ],
             ],
         );
 

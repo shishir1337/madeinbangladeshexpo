@@ -1,19 +1,18 @@
-@php($eventName = $edition?->name ?: config('app.name'))
+@php
+    $city = $page->edition()?->venue?->city;
+    $documentTitle = $page->title().($city ? " · {$city}" : '');
+@endphp
 
-<x-layouts.site :title="$eventName">
-    <main>
-        <h1>{{ $eventName }}</h1>
-
-        <p>{{ $dateRange ?? __('site.dates_to_be_announced') }}</p>
-
-        @if ($edition?->venue)
-            <p>{{ $edition->venue->name }}, {{ $edition->venue->city }}</p>
-        @endif
-
-        <p>{{ __('site.organised_by', ['organiser' => $settings->organiser_name]) }}</p>
-
-        <p>
-            <a href="tel:{{ preg_replace('/[^\d+]/', '', $settings->phone) }}">{{ $settings->phone }}</a>
-        </p>
-    </main>
+<x-layouts.site :title="$documentTitle" :description="__('home.meta_description')" smooth>
+    @include('home.hero')
+    @include('home.countdown')
+    @include('home.paths')
+    @include('home.why')
+    @include('home.routes')
+    @include('home.sectors')
+    @include('home.where')
+    @include('home.timeline')
+    @include('home.highlights')
+    @include('home.partners')
+    @include('home.cta')
 </x-layouts.site>

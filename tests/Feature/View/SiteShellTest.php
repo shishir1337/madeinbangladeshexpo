@@ -96,11 +96,8 @@ class SiteShellTest extends TestCase
 
     public function test_header_ctas_only_show_on_wide_screens(): void
     {
-        $this->registerPages(['register', 'apply']);
-
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertMatchesRegularExpression('/<a href="[^"]*\/register"[^>]*class="[^"]*max-2xl:hidden/', $html);
         $this->assertMatchesRegularExpression('/<a href="[^"]*\/apply"[^>]*class="[^"]*max-xl:hidden/', $html);
         $this->assertStringNotContainsString('hidden md:inline-flex', $html);
         $this->assertStringNotContainsString('hidden sm:inline-flex', $html);

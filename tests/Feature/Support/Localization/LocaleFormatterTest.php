@@ -104,6 +104,16 @@ class LocaleFormatterTest extends TestCase
         $this->assertSame('ComexStat, 2025', $formatter->digits('ComexStat, 2025', 'en'));
     }
 
+    public function test_formats_a_24_hour_time_in_another_time_zone_with_locale_digits(): void
+    {
+        $formatter = app(LocaleFormatter::class);
+        $moment = CarbonImmutable::parse('2027-03-22 13:05', 'UTC');
+
+        $this->assertSame('19:05', $formatter->time($moment, 'Asia/Dhaka', 'en'));
+        $this->assertSame('10:05', $formatter->time($moment, 'America/Sao_Paulo', 'pt_BR'));
+        $this->assertSame('১৯:০৫', $formatter->time($moment, 'Asia/Dhaka', 'bn'));
+    }
+
     public function test_uses_the_current_locale_when_none_is_given(): void
     {
         app()->setLocale('bn');

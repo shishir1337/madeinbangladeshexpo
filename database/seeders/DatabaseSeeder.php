@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             StaffRoleSeeder::class,
             EditionSeeder::class,
             HomeContentSeeder::class,
+            PersonSeeder::class,
         ]);
     }
 }

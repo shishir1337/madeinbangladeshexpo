@@ -47,7 +47,7 @@
                     @if ($card['route'])
                         <x-ui.link :href="localized_route($card['route'])" class="after:absolute after:inset-0 after:rounded-[1.75rem]">{{ __("home.paths.{$card['key']}.cta") }}</x-ui.link>
                     @else
-                        <x-ui.link href="#updates" icon="arrow-down" class="after:absolute after:inset-0 after:rounded-[1.75rem]">{{ __('home.paths.cta_interest') }}</x-ui.link>
+                        <x-ui.link :href="localized_route('home').'#updates'" icon="arrow-down" class="after:absolute after:inset-0 after:rounded-[1.75rem]">{{ __('home.paths.cta_interest') }}</x-ui.link>
                     @endif
                 </div>
             </article>

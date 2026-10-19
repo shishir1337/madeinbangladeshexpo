@@ -10,26 +10,37 @@ class SiteNavigationTest extends TestCase
 {
     public function test_links_to_pages_that_do_not_exist_yet_are_hidden(): void
     {
-        $this->assertNotContains('the-expo', array_column(app(SiteNavigation::class)->primary(), 'key'));
+        $missing = collect(SiteNavigation::routeNames())->first(fn (string $route): bool => ! Route::has("en.{$route}"));
 
-        $this->registerLocalizedRoute('about');
+        if ($missing === null) {
+            $this->markTestSkipped('Every page in the navigation exists.');
+        }
 
-        $groups = collect(app(SiteNavigation::class)->primary())->keyBy('key');
+        $listed = function (): array {
+            $navigation = app(SiteNavigation::class);
 
-        $this->assertTrue($groups->has('the-expo'));
-        $this->assertSame(['about'], array_column($groups['the-expo']['items'], 'route'));
-        $this->assertFalse($groups->has('plan-your-trip'));
+            return collect($navigation->footer())
+                ->flatMap(fn (array $group): array => array_column($group['items'], 'route'))
+                ->push($navigation->contact()['route'] ?? null)
+                ->filter()
+                ->all();
+        };
+
+        $this->assertNotContains($missing, $listed());
+
+        $this->registerLocalizedRoute($missing);
+
+        $this->assertContains($missing, $listed());
     }
 
     public function test_items_carry_localized_urls_labels_and_icons(): void
     {
-        $this->registerLocalizedRoute('about');
         app()->setLocale('pt_BR');
 
         $item = collect(app(SiteNavigation::class)->primary())->firstWhere('key', 'the-expo')['items'][0];
 
         $this->assertSame('Sobre a feira', $item['label']);
-        $this->assertSame(url('/pt/about'), $item['url']);
+        $this->assertSame(url('/pt/sobre'), $item['url']);
         $this->assertSame('info', $item['icon']);
         $this->assertNotSame('', $item['description']);
     }

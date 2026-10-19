@@ -96,6 +96,14 @@ class LocaleFormatter
         return strtr($text, $map);
     }
 
+    /**
+     * A 24-hour clock time in a time zone, in the locale's digits, e.g. "19:05" or "১৯:০৫".
+     */
+    public function time(CarbonInterface $moment, string $timezone, ?string $locale = null): string
+    {
+        return $this->formatPattern($moment->copy()->setTimezone($timezone), $this->resolve($locale)->icu, 'HH:mm');
+    }
+
     private function resolve(?string $locale): Locale
     {
         return $locale === null ? $this->locales->current() : $this->locales->get($locale);

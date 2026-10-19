@@ -127,6 +127,20 @@ class StatSeeder extends Seeder
                 'as_of' => 'CY2025',
                 'placement' => 'routes',
             ],
+            [
+                'key' => 'sao-paulo-population',
+                'value' => 11.5,
+                'decimals' => 1,
+                'suffix' => $million,
+                'label' => [
+                    'en' => 'people in the city of São Paulo, the largest in the Americas',
+                    'pt_BR' => 'habitantes na cidade de São Paulo, a maior das Américas',
+                    'bn' => 'মানুষ সাও পাওলো শহরে, দুই আমেরিকার সবচেয়ে বড় শহর',
+                ],
+                'source' => 'IBGE Census',
+                'as_of' => '2022',
+                'placement' => 'about',
+            ],
         ];
 
         foreach ($stats as $sort => $stat) {

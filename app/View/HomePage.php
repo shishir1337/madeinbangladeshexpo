@@ -15,6 +15,7 @@ use App\Support\Editions\CurrentEdition;
 use App\Support\Images\ImageManifest;
 use App\Support\Localization\LocaleFormatter;
 use App\Support\Localization\Locales;
+use App\Support\Seo\OrganizationSchema;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
@@ -203,24 +204,9 @@ class HomePage
      */
     public function structuredData(GeneralSettings $settings): array
     {
-        $organisation = [
-            '@type' => 'Organization',
-            '@id' => $settings->website.'#organization',
-            'name' => $settings->organiser_name,
-            'alternateName' => $settings->organiser_short_name,
-            'url' => $settings->website,
-            'logo' => app(ImageManifest::class)->url('bbcci-mark', 480),
-            'address' => ['@type' => 'PostalAddress', 'streetAddress' => $settings->office_address, 'addressCountry' => 'BD'],
-            'contactPoint' => [
-                '@type' => 'ContactPoint',
-                'contactType' => 'customer service',
-                'telephone' => $settings->phone,
-                'email' => $settings->email,
-                'availableLanguage' => ['en', 'pt', 'bn'],
-            ],
-        ];
+        $organisation = app(OrganizationSchema::class);
 
-        $graph = [$organisation];
+        $graph = [$organisation->toArray()];
         $edition = $this->edition();
 
         if ($edition !== null) {
@@ -238,7 +224,7 @@ class HomePage
                 'inLanguage' => app(Locales::class)->current()->hreflang,
                 'image' => app(ImageManifest::class)->url('expo25-stand-garments'),
                 'url' => url()->current(),
-                'organizer' => ['@id' => $settings->website.'#organization', 'name' => $settings->organiser_name, 'url' => $settings->website],
+                'organizer' => ['@id' => $organisation->id(), 'name' => $settings->organiser_name, 'url' => $settings->website],
                 'location' => $venue === null ? null : [
                     '@type' => 'Place',
                     'name' => $venue->name,

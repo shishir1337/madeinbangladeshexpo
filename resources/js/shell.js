@@ -81,6 +81,38 @@ export function registerShell(Alpine) {
         },
     }));
 
+    /**
+     * The floating WhatsApp button hides while any [data-hides-help] area is on screen. The attribute's value is how
+     * much of that area must show first: "0" hides it as soon as the footer peeks in, "0.5" while the hero fills
+     * most of the screen.
+     */
+    Alpine.data('helpButton', () => ({
+        hidden: false,
+        showing: new Map(),
+
+        init() {
+            const areas = document.querySelectorAll('[data-hides-help]');
+
+            if (areas.length === 0 || !('IntersectionObserver' in window)) {
+                return;
+            }
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) {
+                        const needed = Number(entry.target.dataset.hidesHelp || 0);
+                        this.showing.set(entry.target, entry.isIntersecting && entry.intersectionRatio >= needed);
+                    }
+
+                    this.hidden = [...this.showing.values()].some(Boolean);
+                },
+                { threshold: [0, 0.25, 0.5, 0.75] },
+            );
+
+            areas.forEach((area) => observer.observe(area));
+        },
+    }));
+
     Alpine.data('tabs', (initial, keys) => ({
         active: initial,
 

@@ -55,6 +55,7 @@ return [
         'dhaka' => 'Daca',
         'office_hours' => 'Horário comercial',
         'after_hours' => 'Fora do expediente',
+        'weekend' => 'Fim de semana',
         'difference' => 'Daca está :hours horas à frente de São Paulo',
         'local_time' => 'Hora local',
     ],

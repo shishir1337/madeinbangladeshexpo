@@ -58,6 +58,16 @@ return [
         // São Paulo (stock: Kaique Rocha / Pexels)
         'sao-paulo-skyline' => ['path' => $source('misc/2024-03_pexels-kaique-rocha-97906.jpg'), 'max' => 2400],
 
+        // Sector photos (stock, Pexels licence; jute and terracotta were shot in Bangladesh). Garments uses expo25-stand-garments.
+        'sector-textiles' => ['path' => $source('sectors/pexels-pixabay-271711.jpg'), 'ratio' => '4:3', 'focus' => [0.4, 0.5], 'max' => 1600],
+        'sector-pharmaceuticals' => ['path' => $source('sectors/pexels-shvets-production-9742736.jpg'), 'ratio' => '4:3', 'max' => 1600],
+        'sector-leather-footwear' => ['path' => $source('sectors/pexels-mehmet-turgut-kirkgoz-13354699.jpg'), 'ratio' => '4:3', 'focus' => [0.5, 0.42], 'max' => 1600],
+        'sector-jute' => ['path' => $source('sectors/pexels-sm-mostafijur-nasim-17778573.jpg'), 'ratio' => '4:3', 'focus' => [0.5, 0.4], 'max' => 1600],
+        'sector-agro-food' => ['path' => $source('sectors/pexels-marybellphoto-5882728.jpg'), 'ratio' => '4:3', 'max' => 1600],
+        'sector-handicrafts' => ['path' => $source('sectors/pexels-mezbah-siqdar-37096336.jpg'), 'ratio' => '4:3', 'focus' => [0.5, 0.62], 'max' => 1600],
+        'sector-plastics-toys' => ['path' => $source('sectors/pexels-jan-van-der-wolf-19342203.jpg'), 'ratio' => '4:3', 'max' => 1600],
+        'sector-ict' => ['path' => $source('sectors/pexels-mizuno-k-12899156.jpg'), 'ratio' => '4:3', 'focus' => [0.55, 0.42], 'max' => 1600],
+
         // BBCCI leadership portraits and logo mark
         'leader-shahriar-ahmed' => ['path' => $source('people/shahriar-ahmed-president.png'), 'max' => 480],
         'leader-saiful-alam' => ['path' => $source('people/md-saiful-alam-vice-president.png'), 'max' => 480],

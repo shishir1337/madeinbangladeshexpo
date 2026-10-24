@@ -19,7 +19,8 @@
                 data-youtube-id="{{ $id }}"
                 class="absolute inset-0 flex items-end p-4 text-left text-white"
             >
-                <span class="absolute top-1/2 left-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-crimson text-white shadow-lift transition-transform duration-300 group-hover:scale-110">
+                {{-- Centred on wide cards; on phones the card is short, so the button moves to the corner, clear of the title. --}}
+                <span class="absolute top-1/2 left-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-crimson text-white shadow-lift transition-transform duration-300 group-hover:scale-110 max-sm:top-4 max-sm:left-4 max-sm:size-11 max-sm:translate-x-0 max-sm:translate-y-0">
                     <x-ui.icon name="play" class="size-6 translate-x-0.5" />
                 </span>
                 <span class="relative">

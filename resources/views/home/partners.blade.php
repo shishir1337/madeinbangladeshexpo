@@ -1,6 +1,11 @@
 @inject('navigation', 'App\Support\Navigation\SiteNavigation')
 
-@php($groups = $page->partnersByRole())
+@php
+    $groups = $page->partnersByRole();
+    $cards = $groups->sum(fn ($partners): int => $partners->count()) + ($navigation->has('sponsorship') ? 1 : 0);
+    // As many columns as cards (up to four), so the row is always full.
+    $columns = [1 => 'lg:grid-cols-1', 2 => 'lg:grid-cols-2', 3 => 'lg:grid-cols-3'][$cards] ?? 'lg:grid-cols-4';
+@endphp
 
 {{-- Who is behind the expo, by role, and an open place for the next partner. --}}
 @if ($groups->isNotEmpty())
@@ -10,12 +15,15 @@
                 <h2 class="eyebrow flex items-center gap-3"><span class="stitch-x w-7 opacity-60" aria-hidden="true"></span>{{ __('home.partners.title') }}</h2>
             </div>
 
-            <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div @class(['mt-8 grid gap-4 sm:grid-cols-2', $columns])>
                 @foreach ($groups as $role => $partners)
                     @foreach ($partners as $partner)
                         <div data-partner-role="{{ $role }}" class="flex items-center gap-4 rounded-[1.4rem] bg-cream p-5 ring-1 ring-sand" data-reveal>
                             @if ($partner->logo)
-                                <x-ui.img :key="$partner->logo" alt="" sizes="56px" class="size-14 rounded-xl bg-white object-contain p-1" />
+                                {{-- The wrapper keeps its size in the flex row; a bare <picture> would shrink and crop the logo. --}}
+                                <span class="grid size-14 shrink-0 place-items-center overflow-hidden rounded-xl bg-white p-1.5 ring-1 ring-sand">
+                                    <x-ui.img :key="$partner->logo" alt="" sizes="56px" class="size-full object-contain" />
+                                </span>
                             @else
                                 <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-navy text-white" aria-hidden="true"><x-ui.icon name="landmark" class="size-6" /></span>
                             @endif

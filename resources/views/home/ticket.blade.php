@@ -65,7 +65,7 @@
                                     <span class="size-2 rounded-full bg-sand-2" x-bind:class="open ? '!bg-green-700' : ''" aria-hidden="true"></span>
                                     <span class="text-ink-soft">{{ __("home.ticket.now_in", ['city' => __("home.countdown.{$city}")]) }}</span>
                                     <span class="font-semibold tabular" x-text="time">{{ $page->clock(now()->toImmutable(), $timezone) }}</span>
-                                    <span class="text-xs text-ink-soft" x-text="open ? @js(__('home.countdown.office_hours')) : @js(__('home.countdown.after_hours'))"></span>
+                                    <span class="text-xs text-ink-soft" x-text="open ? @js(__('home.countdown.office_hours')) : (weekendNow ? @js(__('home.countdown.weekend')) : @js(__('home.countdown.after_hours')))"></span>
                                 </p>
                             @endforeach
                             <p class="text-ink-soft">{{ __('home.countdown.difference', ['hours' => $formatter->plain($page->hoursAhead('America/Sao_Paulo', 'Asia/Dhaka'))]) }}</p>

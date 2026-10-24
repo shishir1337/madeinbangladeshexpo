@@ -55,6 +55,7 @@ return [
         'dhaka' => 'Dhaka',
         'office_hours' => 'Office hours',
         'after_hours' => 'After hours',
+        'weekend' => 'Weekend',
         'difference' => 'Dhaka is :hours hours ahead of São Paulo',
         'local_time' => 'Local time',
     ],

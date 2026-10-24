@@ -43,6 +43,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'textiles', 'pt_BR' => 'texteis', 'bn' => 'textiles'],
                 'icon' => 'layers',
+                'image' => 'sector-textiles',
                 'name' => ['en' => 'Home & technical textiles', 'pt_BR' => 'Têxteis para casa e técnicos', 'bn' => 'হোম ও টেকনিক্যাল টেক্সটাইল'],
                 'summary' => [
                     'en' => 'Bed linen, towels, curtains, yarn and technical fabrics for a large home-goods market.',
@@ -62,6 +63,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'pharmaceuticals', 'pt_BR' => 'farmaceuticos', 'bn' => 'pharmaceuticals'],
                 'icon' => 'pill',
+                'image' => 'sector-pharmaceuticals',
                 'name' => ['en' => 'Pharmaceuticals', 'pt_BR' => 'Farmacêuticos', 'bn' => 'ওষুধ'],
                 'summary' => [
                     'en' => 'Generics and APIs from WHO-GMP plants. ANVISA registration and a local holder are required.',
@@ -82,6 +84,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'leather-footwear', 'pt_BR' => 'couro-e-calcados', 'bn' => 'leather-footwear'],
                 'icon' => 'footprints',
+                'image' => 'sector-leather-footwear',
                 'name' => ['en' => 'Leather & footwear', 'pt_BR' => 'Couro e calçados', 'bn' => 'চামড়া ও জুতা'],
                 'summary' => [
                     'en' => 'Leather goods, bags and footwear, including from LWG-certified tanneries.',
@@ -101,6 +104,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'jute', 'pt_BR' => 'juta', 'bn' => 'jute'],
                 'icon' => 'leaf',
+                'image' => 'sector-jute',
                 'name' => ['en' => 'Jute & jute goods', 'pt_BR' => 'Juta e produtos de juta', 'bn' => 'পাট ও পাটজাত পণ্য'],
                 'summary' => [
                     'en' => 'Coffee and cocoa sacks, yarn, geotextiles and eco-friendly bags from the golden fibre.',
@@ -120,6 +124,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'agro-food', 'pt_BR' => 'agroalimentos', 'bn' => 'agro-food'],
                 'icon' => 'wheat',
+                'image' => 'sector-agro-food',
                 'name' => ['en' => 'Agro-food & seafood', 'pt_BR' => 'Agroalimentos e pescados', 'bn' => 'কৃষি-খাদ্য ও সামুদ্রিক খাবার'],
                 'summary' => [
                     'en' => 'Frozen shrimp and fish, spices, snacks and processed foods, under MAPA and ANVISA rules.',
@@ -140,6 +145,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'handicrafts', 'pt_BR' => 'artesanato', 'bn' => 'handicrafts'],
                 'icon' => 'palette',
+                'image' => 'sector-handicrafts',
                 'name' => ['en' => 'Handicrafts & décor', 'pt_BR' => 'Artesanato e decoração', 'bn' => 'হস্তশিল্প ও গৃহসজ্জা'],
                 'summary' => [
                     'en' => 'Ceramics, home décor, baskets and handmade gifts with a story behind every piece.',
@@ -160,6 +166,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'plastics-toys', 'pt_BR' => 'plasticos-e-brinquedos', 'bn' => 'plastics-toys'],
                 'icon' => 'puzzle',
+                'image' => 'sector-plastics-toys',
                 'name' => ['en' => 'Plastics & toys', 'pt_BR' => 'Plásticos e brinquedos', 'bn' => 'প্লাস্টিক ও খেলনা'],
                 'summary' => [
                     'en' => 'Household plastics, packaging and toys. Toys need INMETRO certification.',
@@ -180,6 +187,7 @@ class SectorSeeder extends Seeder
             [
                 'slug' => ['en' => 'ict', 'pt_BR' => 'tic', 'bn' => 'ict'],
                 'icon' => 'cpu',
+                'image' => 'sector-ict',
                 'name' => ['en' => 'ICT & software', 'pt_BR' => 'TIC e software', 'bn' => 'আইসিটি ও সফটওয়্যার'],
                 'summary' => [
                     'en' => 'Software, BPO and IT services that keep working while Brazil sleeps.',
@@ -198,9 +206,14 @@ class SectorSeeder extends Seeder
         ];
 
         foreach ($sectors as $sort => $sector) {
-            Sector::query()->where('slug->en', $sector['slug']['en'])->firstOr(
+            $existing = Sector::query()->where('slug->en', $sector['slug']['en'])->firstOr(
                 fn (): Sector => Sector::create($sector + ['sort' => $sort]),
             );
+
+            // Sectors seeded before they had photos get one; a photo staff chose is left alone.
+            if ($existing->image === null && isset($sector['image'])) {
+                $existing->update(['image' => $sector['image']]);
+            }
         }
     }
 }

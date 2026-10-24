@@ -14,7 +14,7 @@
     slide together; where they overlap is green, the colour both flags share, with Brazil's yellow diamond at the
     centre. The series name stays the same every year; the edition (its year) is the yellow stamp.
 --}}
-<section data-hero data-tone="midnight" data-pause-offscreen class="relative isolate -mt-16 overflow-hidden bg-midnight text-white lg:-mt-[4.5rem]">
+<section data-hero data-hides-help="0.5" data-tone="midnight" data-pause-offscreen class="relative isolate -mt-16 overflow-hidden bg-midnight text-white lg:-mt-[4.5rem]">
     <div class="absolute inset-0 -z-10 bg-[radial-gradient(55%_65%_at_82%_35%,rgb(36_86_214/0.32),transparent_70%),radial-gradient(45%_60%_at_8%_95%,rgb(0_79_58/0.6),transparent_72%),linear-gradient(180deg,#06152b_0%,#071a33_60%,#0a2240_100%)]" aria-hidden="true"></div>
     <img src="{{ asset('img/world-dots.svg') }}" alt="" width="1000" height="380" decoding="async" class="pointer-events-none absolute top-24 right-[-18%] -z-10 w-[120%] max-w-none opacity-[0.09] select-none lg:right-[-8%] lg:w-[85%]" aria-hidden="true">
 
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="scroll-drift lg:col-span-5">
+        <div class="scroll-drift max-sm:mb-14 lg:col-span-5">
             <div class="hero-discs relative mx-auto aspect-[1.62/1] w-full max-w-[36rem] lg:-mr-6 xl:-mr-12">
                 <div class="hero-disc hero-disc--sun absolute top-0 left-0 aspect-square w-[61.7%] rounded-full border-[clamp(5px,0.9vw,12px)] border-sun bg-sun shadow-float">
                     <div class="size-full overflow-hidden rounded-full">
@@ -85,7 +85,8 @@
 
                 <p class="hero-tag absolute -bottom-3 left-[4%] woven-label -rotate-[5deg]" aria-hidden="true">{{ __('home.hero.makers') }}</p>
                 <p class="hero-tag absolute -top-4 right-[3%] woven-label rotate-[4deg]" style="--label-fg: var(--color-globe)" aria-hidden="true">{{ __('home.hero.buyers') }}</p>
-                <p class="hero-tag absolute -top-5 left-[2%] inline-flex -rotate-[4deg] items-center gap-2 rounded-full bg-yellow px-4 py-2 text-sm font-semibold text-navy shadow-lift">
+                {{-- On phones the two top tags would collide, so the free badge hangs centred below the discs. --}}
+                <p class="hero-tag absolute -top-5 left-[2%] inline-flex -rotate-[4deg] items-center gap-2 rounded-full bg-yellow px-4 py-2 text-sm font-semibold whitespace-nowrap text-navy shadow-lift max-sm:top-auto max-sm:-bottom-16 max-sm:left-1/2 max-sm:-translate-x-1/2 max-sm:-rotate-2">
                     <x-ui.icon name="ticket" class="size-4" />
                     {{ __('home.hero.free_badge') }}
                 </p>

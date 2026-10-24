@@ -126,12 +126,38 @@ class SiteShellTest extends TestCase
         $this->assertStringContainsString('x-on:focusout=', $html);
     }
 
-    public function test_footer_reserves_room_for_the_help_button_at_every_width(): void
+    public function test_the_help_button_steps_aside_over_the_footer_and_the_footer_keeps_room_for_it_without_javascript(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
 
-        $this->assertMatchesRegularExpression('/<footer[\s\S]*pb-28[\s\S]*<\/footer>/', $html);
+        $this->assertMatchesRegularExpression('/<footer[^>]*data-hides-help/', $html);
+        $this->assertMatchesRegularExpression('/<a[^>]*x-data="helpButton"[^>]*href="https:\/\/wa\.me\//', $html);
+        $this->assertMatchesRegularExpression('/<footer[\s\S]*no-js:pb-28[\s\S]*<\/footer>/', $html);
         $this->assertStringNotContainsString('sm:pb-6', $html);
+    }
+
+    public function test_footer_sets_its_links_in_four_balanced_columns_ending_with_help_and_contact(): void
+    {
+        $this->registerPages(['about', 'exhibit', 'venue', 'news', 'faq', 'privacy']);
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $footer = substr($html, strpos($html, '<footer'));
+
+        $this->assertSame(4, substr_count($footer, 'data-footer-column'));
+        $this->assertMatchesRegularExpression('/data-footer-column[\s\S]*?id="footer-the-expo"[\s\S]*?data-footer-column[\s\S]*?id="footer-take-part"[\s\S]*?data-footer-column[\s\S]*?id="footer-plan-your-trip"[\s\S]*?id="footer-news-media"[\s\S]*?data-footer-column[\s\S]*?id="footer-help"[\s\S]*?Talk to us/', $footer);
+        $this->assertStringContainsString('aria-controls="footer-the-expo"', $footer);
+        $this->assertStringContainsString('sg@<wbr>brazilbangladeshchamber.com', $footer);
+    }
+
+    public function test_footer_shows_the_current_edition(): void
+    {
+        $this->travelTo('2026-10-19 12:00:00');
+        $this->createCurrentEdition();
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $footer = substr($html, strpos($html, '<footer'));
+
+        $this->assertMatchesRegularExpression('/22–25 March 2027[\s\S]*?Pro Magno Centro de Eventos, São Paulo/u', $footer);
     }
 
     public function test_dismissed_announcement_is_hidden_before_first_paint(): void

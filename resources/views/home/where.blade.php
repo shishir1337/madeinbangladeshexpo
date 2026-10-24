@@ -65,13 +65,14 @@
                     </div>
                 </div>
 
-                <ul class="mt-5 grid gap-3 sm:grid-cols-3" data-reveal>
+                {{-- Each link is as wide as its label and the row shares out the rest, so no label breaks onto two lines. --}}
+                <ul class="mt-5 grid gap-3 sm:flex sm:flex-wrap" data-reveal>
                     @foreach (['travel' => 'plane', 'hotels' => 'bed', 'city-guide' => 'compass'] as $route => $icon)
                         @if ($navigation->has($route))
-                            <li>
+                            <li class="sm:flex-auto">
                                 <a href="{{ localized_route($route) }}" class="group flex h-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 font-semibold text-navy shadow-soft ring-1 ring-ink/5 transition hover:-translate-y-0.5 hover:shadow-lift">
                                     <x-ui.icon :name="$icon" class="size-5 text-green" />
-                                    <span class="min-w-0 flex-1 text-[0.95rem] leading-tight">{{ __('home.where.links.'.$route) }}</span>
+                                    <span class="min-w-0 flex-1 text-[0.95rem] leading-tight whitespace-nowrap">{{ __('home.where.links.'.$route) }}</span>
                                     <x-ui.icon name="arrow-right" class="size-4 opacity-50 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
                                 </a>
                             </li>

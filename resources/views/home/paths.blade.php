@@ -22,9 +22,9 @@
     <ul class="mt-14 grid gap-x-5 gap-y-12 pt-6 sm:grid-cols-2 xl:grid-cols-4">
         @foreach ($cards as $card)
             <li class="relative" data-reveal>
-                {{-- The string the tag hangs from. --}}
-                <svg class="absolute -top-7 left-1/2 h-10 w-6 -translate-x-1/2 text-ink/35" viewBox="0 0 24 40" fill="none" aria-hidden="true" focusable="false">
-                    <path d="M12 0c0 10 6 14 0 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                {{-- The string the tag hangs from: it runs over the card's edge and into the punched hole (24px down). --}}
+                <svg class="pointer-events-none absolute -top-7 left-1/2 z-10 h-[3.25rem] w-6 -translate-x-1/2 text-ink/40" viewBox="0 0 24 52" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M12 0c-2 16 2 32 0 52" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                 </svg>
                 <article
                     @if ($card['dark']) data-tone="{{ $card['key'] === 'exhibit' ? 'green' : 'midnight' }}" @endif

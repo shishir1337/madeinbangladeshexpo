@@ -55,6 +55,7 @@ return [
         'dhaka' => 'ঢাকা',
         'office_hours' => 'অফিস সময়',
         'after_hours' => 'অফিস সময়ের বাইরে',
+        'weekend' => 'সাপ্তাহিক ছুটি',
         'difference' => 'ঢাকা সাও পাওলোর চেয়ে :hours ঘণ্টা এগিয়ে',
         'local_time' => 'স্থানীয় সময়',
     ],

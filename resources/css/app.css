@@ -18,3 +18,6 @@
  * the dark one (a white card on a midnight band), so light cards never inherit white-on-white text.
  */
 @custom-variant on-dark (&:where([data-tone='midnight'] *, [data-tone='green'] *, .on-dark *):not(:where(:is([data-tone='midnight'], [data-tone='green']) :is([data-tone='white'], [data-tone='cream'], [data-tone='sand']) *)));
+
+/* Only when JavaScript did not run (the layout adds .js to <html> before first paint). */
+@custom-variant no-js (&:where(html:not(.js) *));

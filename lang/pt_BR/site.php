@@ -28,6 +28,7 @@ return [
     'footer' => [
         'mission' => 'A feira de negócios onde fabricantes de Bangladesh encontram compradores do Brasil e da América Latina.',
         'organised_by' => 'Organização',
+        'this_edition' => 'Esta edição',
         'contact_heading' => 'Fale conosco',
         'office' => 'Escritório em Daca',
         'call' => 'Ligar',

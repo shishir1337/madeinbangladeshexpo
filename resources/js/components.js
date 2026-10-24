@@ -107,6 +107,7 @@ export function registerComponents(Alpine) {
     Alpine.data('clock', (timeZone, weekend = timeZone === 'Asia/Dhaka' ? ['Fri', 'Sat'] : ['Sat', 'Sun']) => ({
         time: '',
         open: false,
+        weekendNow: false,
 
         init() {
             const lang = document.documentElement.lang || 'en';
@@ -122,7 +123,8 @@ export function registerComponents(Alpine) {
             const hour = Number(parts.hour);
 
             this.time = this.formatter.format(now);
-            this.open = !weekend.includes(parts.weekday) && hour >= 9 && hour < 18;
+            this.weekendNow = weekend.includes(parts.weekday);
+            this.open = !this.weekendNow && hour >= 9 && hour < 18;
         },
     }));
 

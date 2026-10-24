@@ -66,7 +66,7 @@
                         class="header-pill inline-flex h-10 items-center gap-2 rounded-full px-2.5 text-sm font-semibold max-sm:hidden sm:px-3"
                     >
                         <x-ui.icon name="log-in" class="size-4" />
-                        <span class="max-2xl:sr-only">{{ $account['label'] }}</span>
+                        <span class="max-xl:sr-only">{{ $account['label'] }}</span>
                     </a>
                 @endif
 

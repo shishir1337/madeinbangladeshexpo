@@ -8,6 +8,7 @@ use App\Models\Sector;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\EditionSeeder;
+use Database\Seeders\SectorSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -47,6 +48,20 @@ class DatabaseSeederTest extends TestCase
         $this->seed(DatabaseSeeder::class);
         $this->assertSame('## Edited by staff', $sectors->first()->fresh()->getTranslation('body', 'en'));
         $this->assertSame(15, Exhibitor::count());
+    }
+
+    public function test_sector_seeder_fills_a_missing_photo_but_keeps_one_staff_chose(): void
+    {
+        $this->seed(SectorSeeder::class);
+        $jute = Sector::query()->where('slug->en', 'jute')->first();
+        $garments = Sector::query()->where('slug->en', 'garments')->first();
+        $jute->update(['image' => null]);
+        $garments->update(['image' => 'expo25-stand-sts']);
+
+        $this->seed(SectorSeeder::class);
+
+        $this->assertSame('sector-jute', $jute->fresh()->image);
+        $this->assertSame('expo25-stand-sts', $garments->fresh()->image);
     }
 
     public function test_the_test_user_is_only_created_on_a_local_machine(): void

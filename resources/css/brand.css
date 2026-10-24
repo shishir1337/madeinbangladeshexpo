@@ -9,7 +9,8 @@
         --hdr-ring: var(--color-sand);
         --hdr-hover: rgb(230 220 198 / 0.6);
         color: var(--hdr-fg);
-        background-color: rgb(251 247 238 / 0.84);
+        /* Nearly opaque: at 84% a dark section scrolling underneath turned the bar grey. */
+        background-color: rgb(251 247 238 / 0.95);
         border-color: rgb(230 220 198 / 0.9);
         backdrop-filter: blur(14px) saturate(1.4);
         transition:

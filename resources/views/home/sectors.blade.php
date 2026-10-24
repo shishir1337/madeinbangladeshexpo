@@ -5,7 +5,7 @@
     $sectorPages = Route::has(app()->getLocale().'.sectors.show');
     $formatter = $page->formatter();
 
-    // Each sector is drawn as its own material: denim for garments, terry for home textiles, jute weave, leather...
+    // Each card shows its sector's photo; a sector without one is drawn as its own material (denim, terry, jute weave...).
     $materials = [
         'garments' => 'twill',
         'textiles' => 'terry',
@@ -33,11 +33,23 @@
                 @php
                     $featured = $loop->first;
                     $href = $sectorPages ? localized_route('sectors.show', ['sector' => $sector]) : null;
+                    // Slugs are translated (vestuario, texteis...), so the material is keyed by the English one.
+                    $material = $materials[$sector->getTranslation('slug', 'en')] ?? 'twill';
                 @endphp
                 <li data-reveal @class(['min-h-[17rem] sm:min-h-0', 'sm:col-span-2 sm:row-span-2' => $featured])>
                     <article data-sector-card="{{ $sector->id }}" data-tone="midnight" class="group relative isolate flex h-full flex-col overflow-hidden rounded-[1.5rem] p-6 text-white shadow-soft transition duration-500 hover:shadow-float md:p-7">
-                        <div class="swatch swatch--{{ $materials[$sector->slug] ?? 'twill' }} absolute inset-0 -z-20 transition-transform duration-[1.2s] ease-[var(--ease-out-quint)] group-hover:scale-[1.08]" aria-hidden="true"></div>
-                        <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black/70 via-black/20 to-transparent" aria-hidden="true"></div>
+                        @if ($sector->image)
+                            <x-ui.img
+                                :key="$sector->image"
+                                alt=""
+                                :sizes="$featured ? '(min-width: 40rem) 50vw, 82vw' : '(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 82vw'"
+                                class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-[1.2s] ease-[var(--ease-out-quint)] group-hover:scale-[1.08]"
+                            />
+                        @else
+                            <div class="swatch swatch--{{ $material }} absolute inset-0 -z-20 transition-transform duration-[1.2s] ease-[var(--ease-out-quint)] group-hover:scale-[1.08]" aria-hidden="true"></div>
+                        @endif
+                        {{-- A midnight scrim from the bottom keeps the white name and yellow figure readable on bright, busy photos. --}}
+                        <div class="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgb(7_26_51/0.94)_0%,rgb(7_26_51/0.78)_38%,rgb(7_26_51/0.25)_72%,rgb(7_26_51/0.1)_100%)]" aria-hidden="true"></div>
 
                         <div class="flex items-start justify-between gap-4">
                             <span class="grid size-12 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/25 backdrop-blur-sm">
@@ -50,7 +62,7 @@
                             @endif
                         </div>
 
-                        <div class="mt-auto">
+                        <div class="mt-auto [text-shadow:0_1px_12px_rgb(7_26_51/0.55)]">
                             <h3 @class([
                                 'font-display leading-[1.02] font-bold tracking-[-0.02em] text-white',
                                 'text-[clamp(2rem,1.4rem+2vw,3.25rem)]' => $featured,

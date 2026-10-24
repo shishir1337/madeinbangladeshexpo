@@ -28,6 +28,7 @@ return [
     'footer' => [
         'mission' => 'The trade expo where Bangladeshi manufacturers meet buyers from Brazil and Latin America.',
         'organised_by' => 'Organised by',
+        'this_edition' => 'This edition',
         'contact_heading' => 'Talk to us',
         'office' => 'Dhaka office',
         'call' => 'Call',

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http;
 
 use App\Models\Edition;
+use App\Models\Sector;
 use App\View\HomePage;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -74,6 +75,52 @@ class HomeRedesignTest extends TestCase
         $this->get('/')->assertOk()
             ->assertSee('data-section="programme"', false)
             ->assertSeeInOrder(['Exhibition', 'B2B meetings', 'Seminars', 'Ceremonies and press']);
+    }
+
+    public function test_each_sector_card_shows_a_photo_of_its_own_sector_in_every_language(): void
+    {
+        $sectors = Sector::query()->orderBy('sort')->get();
+        $this->assertCount(9, $sectors->whereNotNull('image'));
+
+        foreach (['/', '/pt', '/bn'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+
+            foreach ($sectors as $sector) {
+                $start = strpos($html, 'data-sector-card="'.$sector->id.'"');
+                $this->assertNotFalse($start, "{$path}: no card for [{$sector->getTranslation('slug', 'en')}].");
+
+                $card = substr($html, $start, strpos($html, '</article>', $start) - $start);
+                $this->assertStringContainsString("img/{$sector->image}-", $card, "{$path}: [{$sector->getTranslation('slug', 'en')}] does not show its photo.");
+            }
+        }
+    }
+
+    public function test_a_sector_without_a_photo_keeps_its_own_material_in_every_language(): void
+    {
+        Sector::query()->update(['image' => null]);
+
+        foreach (['/', '/pt', '/bn'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+
+            $this->assertMatchesRegularExpression('/data-sector-card="\d+"[^>]*>\s*<div class="swatch swatch--terry/', $html, "{$path}: textiles lost its terry background.");
+            $this->assertMatchesRegularExpression('/data-sector-card="\d+"[^>]*>\s*<div class="swatch swatch--circuit/', $html, "{$path}: ICT lost its circuit background.");
+        }
+    }
+
+    public function test_partner_cards_fill_their_row_and_logos_cannot_be_squeezed(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        $partners = substr($html, strpos($html, 'data-section="partners"'));
+        $partners = substr($partners, 0, strpos($partners, '</section>'));
+
+        $this->assertStringContainsString('lg:grid-cols-3', $partners);
+        $this->assertMatchesRegularExpression('/<span class="[^"]*shrink-0[^"]*">\s*<picture>/', $partners);
+    }
+
+    public function test_the_ticket_clock_can_say_it_is_the_weekend(): void
+    {
+        $this->get('/')->assertOk()->assertSee('Weekend');
+        $this->get('/pt')->assertOk()->assertSee('Fim de semana');
     }
 
     /**

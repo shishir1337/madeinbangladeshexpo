@@ -10,9 +10,9 @@ class DatabaseConnectionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_tests_run_against_the_mysql_test_database(): void
+    public function test_tests_run_against_an_in_memory_sqlite_database(): void
     {
-        $this->assertSame('mysql', DB::connection()->getDriverName());
-        $this->assertSame('bbcci_expo_test', DB::connection()->getDatabaseName());
+        $this->assertSame('sqlite', DB::connection()->getDriverName());
+        $this->assertSame(':memory:', DB::connection()->getDatabaseName());
     }
 }

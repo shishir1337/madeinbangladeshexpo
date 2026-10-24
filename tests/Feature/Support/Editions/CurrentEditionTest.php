@@ -5,6 +5,7 @@ namespace Tests\Feature\Support\Editions;
 use App\Models\Edition;
 use App\Support\Editions\CurrentEdition;
 use Database\Seeders\EditionSeeder;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -25,6 +26,16 @@ class CurrentEditionTest extends TestCase
         Edition::factory()->archived()->create();
 
         $this->assertNull(app(CurrentEdition::class)->get());
+    }
+
+    public function test_the_database_allows_only_one_current_edition_but_any_number_of_others(): void
+    {
+        Edition::factory()->current()->create();
+        Edition::factory()->archived()->count(2)->create();
+
+        $this->expectException(UniqueConstraintViolationException::class);
+
+        Edition::factory()->current()->create();
     }
 
     public function test_seeder_creates_the_2025_archive_and_the_current_2026_edition(): void

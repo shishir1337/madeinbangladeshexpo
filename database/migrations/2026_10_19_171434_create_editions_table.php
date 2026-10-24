@@ -25,9 +25,10 @@ return new class extends Migration
             $table->boolean('is_current')->default(false);
 
             // MySQL has no partial indexes: 1 for the current edition, NULL otherwise, so the unique index allows one current edition.
+            // CASE rather than if(): SQLite only has if() from 3.48, and Ubuntu 24.04 ships 3.45.
             $table->unsignedTinyInteger('current_marker')
                 ->nullable()
-                ->storedAs('if(is_current, 1, null)')
+                ->storedAs('case when is_current then 1 end')
                 ->unique('editions_single_current');
 
             $table->timestamps();
